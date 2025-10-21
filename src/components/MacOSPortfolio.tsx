@@ -1083,7 +1083,9 @@ const MacOSDock: React.FC<{
             >
               <motion.button
                 onClick={() => onAppClick(app.id)}
-                className="relative w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer glass-card hover:shadow-glow"
+                className={`relative w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer glass-card hover:shadow-glow ${
+                  app.id === 'certifications' ? 'ring-2 ring-yellow-400/50 shadow-glow-lg' : ''
+                }`}
                 style={{
                   transform: hoveredIndex === index ? 'scale(1.1) translateY(-8px)' : 'scale(1)',
                 }}
@@ -1105,10 +1107,15 @@ const MacOSDock: React.FC<{
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 glass-card text-white text-xs rounded-lg whitespace-nowrap shadow-glass"
+                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 glass-card text-white text-xs rounded-lg whitespace-nowrap shadow-glass ${
+                      app.id === 'certifications' ? 'bg-yellow-500/20 border border-yellow-400/30' : ''
+                    }`}
                   >
                     {app.name}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/10" />
+                    {app.id === 'certifications' && <span className="ml-1">🏆</span>}
+                    <div className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${
+                      app.id === 'certifications' ? 'border-t-yellow-400/30' : 'border-t-white/10'
+                    }`} />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -1146,10 +1153,10 @@ const MacOSPortfolio: React.FC = () => {
 
   const apps: DockApp[] = [
     { id: 'about', name: 'About Me', icon: 'https://cdn.jim-nielsen.com/macos/1024/finder-2021-09-10.png?rf=1024', color: 'blue' },
+    { id: 'certifications', name: 'Certifications', icon: 'https://cdn.jim-nielsen.com/macos/1024/messages-2021-05-25.png?rf=1024', color: 'yellow' },
     { id: 'projects', name: 'Projects', icon: 'https://cdn.jim-nielsen.com/macos/1024/notes-2021-05-25.png?rf=1024', color: 'green' },
     { id: 'skills', name: 'Skills', icon: 'https://cdn.jim-nielsen.com/macos/1024/calculator-2021-04-29.png?rf=1024', color: 'purple' },
     { id: 'experience', name: 'Experience', icon: 'https://cdn.jim-nielsen.com/macos/1024/calendar-2021-04-29.png?rf=1024', color: 'orange' },
-    { id: 'certifications', name: 'Certifications', icon: 'https://cdn.jim-nielsen.com/macos/1024/certificate-2021-04-29.png?rf=1024', color: 'yellow' },
     { id: 'contact', name: 'Contact', icon: 'https://cdn.jim-nielsen.com/macos/1024/mail-2021-05-25.png?rf=1024', color: 'red' },
     { id: 'terminal', name: 'Terminal', icon: 'https://cdn.jim-nielsen.com/macos/1024/terminal-2021-06-03.png?rf=1024', color: 'gray' },
   ];
@@ -1218,7 +1225,7 @@ const MacOSPortfolio: React.FC = () => {
             className="text-6xl md:text-8xl font-bold text-white mb-8 leading-tight"
           >
             Welcome to my<br />
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Portfolio OS
             </span>
           </motion.h1>
