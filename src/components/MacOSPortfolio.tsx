@@ -21,7 +21,8 @@ import {
   Star,
   Zap,
   Shield,
-  Layers
+  Layers,
+  Globe
 } from 'lucide-react';
 
 // Types
@@ -91,9 +92,8 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
       animate={{ 
         opacity: 1, 
         scale: 1, 
-        y: 0,
-        x: isMaximized ? 0 : position.x,
         y: isMaximized ? 0 : position.y,
+        x: isMaximized ? 0 : position.x,
         width: isMaximized ? '100vw' : '700px',
         height: isMaximized ? '100vh' : 'auto',
         maxHeight: isMaximized ? '100vh' : '85vh'
@@ -1140,6 +1140,9 @@ const MacOSDock: React.FC<{
 const MacOSPortfolio: React.FC = () => {
   const [openWindows, setOpenWindows] = useState<string[]>([]);
   const [time, setTime] = useState('');
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isMouseMoving, setIsMouseMoving] = useState(false);
+  const mouseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const updateTime = () => {
@@ -1149,6 +1152,30 @@ const MacOSPortfolio: React.FC = () => {
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Interactive cursor effects
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+      setIsMouseMoving(true);
+      
+      if (mouseTimeoutRef.current) {
+        clearTimeout(mouseTimeoutRef.current);
+      }
+      
+      mouseTimeoutRef.current = setTimeout(() => {
+        setIsMouseMoving(false);
+      }, 100);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (mouseTimeoutRef.current) {
+        clearTimeout(mouseTimeoutRef.current);
+      }
+    };
   }, []);
 
   const apps: DockApp[] = [
@@ -1186,16 +1213,50 @@ const MacOSPortfolio: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden">
-      {/* Animated Grid Background */}
-      <div className="grid-bg"></div>
+      {/* Interactive Background Elements */}
+      <div className="floating-element"></div>
+      <div className="floating-element"></div>
+      <div className="floating-element"></div>
+      <div className="floating-element"></div>
       
-      {/* Geometric Shapes */}
-      <div className="geometric-bg">
-        <div className="geometric-shape shape-1"></div>
-        <div className="geometric-shape shape-2"></div>
-        <div className="geometric-shape shape-3"></div>
-        <div className="geometric-shape shape-4"></div>
-        </div>
+      {/* Parallax Elements */}
+      <div className="parallax-element"></div>
+      <div className="parallax-element"></div>
+      <div className="parallax-element"></div>
+      
+      {/* Light Waves */}
+      <div className="light-wave"></div>
+      <div className="light-wave"></div>
+      <div className="light-wave"></div>
+      
+      {/* Interactive Cursor Glow */}
+      <motion.div
+        className="cursor-glow"
+        style={{
+          left: cursorPosition.x - 150,
+          top: cursorPosition.y - 150,
+        }}
+        animate={{
+          opacity: isMouseMoving ? 0.3 : 0,
+          scale: isMouseMoving ? 1 : 0.8,
+        }}
+        transition={{ duration: 0.3 }}
+      />
+      
+      {/* Interactive Cursor Trail */}
+      {isMouseMoving && (
+        <motion.div
+          className="cursor-trail"
+          style={{
+            left: cursorPosition.x - 10,
+            top: cursorPosition.y - 10,
+          }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{ duration: 0.2 }}
+        />
+      )}
       {/* Enhanced macOS Menu Bar */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -1274,7 +1335,7 @@ const MacOSPortfolio: React.FC = () => {
               Help
             </motion.span>
         </div>
-      </div>
+        </div>
 
         {/* System Indicators */}
         <div className="flex items-center gap-3">
@@ -1321,7 +1382,7 @@ const MacOSPortfolio: React.FC = () => {
           <span className="text-xs text-white/90 font-medium px-2 py-1 rounded-sm hover:bg-white/10 cursor-pointer transition-colors">
             {time}
           </span>
-        </div>
+      </div>
       </motion.div>
 
       {/* Enhanced Hero Section */}
