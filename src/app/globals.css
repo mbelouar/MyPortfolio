@@ -6,56 +6,56 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
 :root {
-  /* Modern Color Palette */
+  /* Monochrome Color Palette */
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 8, 8, 12;
-  --background-end-rgb: 15, 15, 23;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 20, 20, 20;
   
-  /* Primary Colors */
-  --primary: 262 100% 70%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 262 30% 15%;
-  --secondary-foreground: 262 100% 70%;
+  /* Primary Colors - Pure White */
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 100%;
   
-  /* Accent Colors */
-  --accent: 280 100% 70%;
-  --accent-foreground: 0 0% 100%;
-  --muted: 262 20% 8%;
-  --muted-foreground: 262 10% 65%;
+  /* Accent Colors - Light Grey */
+  --accent: 0 0% 85%;
+  --accent-foreground: 0 0% 0%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 70%;
   
   /* Surface Colors */
-  --card: 262 20% 6%;
+  --card: 0 0% 5%;
   --card-foreground: 0 0% 100%;
-  --popover: 262 20% 6%;
+  --popover: 0 0% 5%;
   --popover-foreground: 0 0% 100%;
   
   /* Status Colors */
-  --destructive: 0 84% 60%;
+  --destructive: 0 0% 60%;
   --destructive-foreground: 0 0% 100%;
-  --success: 142 76% 36%;
-  --warning: 38 92% 50%;
+  --success: 0 0% 50%;
+  --warning: 0 0% 70%;
   
   /* Border & Input */
-  --border: 262 20% 18%;
-  --input: 262 20% 12%;
-  --ring: 262 100% 70%;
+  --border: 0 0% 25%;
+  --input: 0 0% 15%;
+  --ring: 0 0% 100%;
   
   /* Chart Colors */
-  --chart-1: 262 100% 70%;
-  --chart-2: 280 100% 70%;
-  --chart-3: 300 100% 70%;
-  --chart-4: 320 100% 70%;
-  --chart-5: 340 100% 70%;
+  --chart-1: 0 0% 100%;
+  --chart-2: 0 0% 80%;
+  --chart-3: 0 0% 60%;
+  --chart-4: 0 0% 40%;
+  --chart-5: 0 0% 20%;
   
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, hsl(262, 100%, 70%) 0%, hsl(280, 100%, 70%) 100%);
-  --gradient-secondary: linear-gradient(135deg, hsl(262, 30%, 15%) 0%, hsl(280, 30%, 15%) 100%);
-  --gradient-accent: linear-gradient(135deg, hsl(280, 100%, 70%) 0%, hsl(300, 100%, 70%) 100%);
+  --gradient-primary: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 80%) 100%);
+  --gradient-secondary: linear-gradient(135deg, hsl(0, 0%, 15%) 0%, hsl(0, 0%, 25%) 100%);
+  --gradient-accent: linear-gradient(135deg, hsl(0, 0%, 80%) 0%, hsl(0, 0%, 60%) 100%);
 }
 
 * {
@@ -79,7 +79,7 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: radial-gradient(ellipse at top, hsl(262, 20%, 8%) 0%, hsl(262, 30%, 6%) 50%, hsl(262, 20%, 4%) 100%);
+  background: radial-gradient(ellipse at top, hsl(0, 0%, 8%) 0%, hsl(0, 0%, 4%) 50%, hsl(0, 0%, 2%) 100%);
   min-height: 100vh;
   position: relative;
 }
@@ -93,10 +93,103 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 20% 80%, hsl(262, 100%, 70%, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, hsl(280, 100%, 70%, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, hsl(300, 100%, 70%, 0.05) 0%, transparent 50%);
-  animation: backgroundShift 20s ease-in-out infinite;
+    radial-gradient(circle at 20% 80%, hsl(0, 0%, 100%, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, hsl(0, 0%, 80%, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, hsl(0, 0%, 60%, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 60% 60%, hsl(0, 0%, 40%, 0.1) 0%, transparent 50%);
+  animation: backgroundShift 25s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Floating Particles */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, hsl(0, 0%, 100%, 0.2), transparent),
+    radial-gradient(2px 2px at 40px 70px, hsl(0, 0%, 80%, 0.2), transparent),
+    radial-gradient(1px 1px at 90px 40px, hsl(0, 0%, 60%, 0.3), transparent),
+    radial-gradient(1px 1px at 130px 80px, hsl(0, 0%, 40%, 0.2), transparent),
+    radial-gradient(2px 2px at 160px 30px, hsl(0, 0%, 20%, 0.2), transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: particleFloat 20s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Geometric Shapes */
+.geometric-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.geometric-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: geometricFloat 15s ease-in-out infinite;
+}
+
+.shape-1 {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+  background: linear-gradient(45deg, hsl(0, 0%, 100%, 0.08), hsl(0, 0%, 80%, 0.08));
+}
+
+.shape-2 {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: 15%;
+  animation-delay: -5s;
+  background: linear-gradient(45deg, hsl(0, 0%, 80%, 0.08), hsl(0, 0%, 60%, 0.08));
+}
+
+.shape-3 {
+  width: 150px;
+  height: 150px;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: -10s;
+  background: linear-gradient(45deg, hsl(0, 0%, 60%, 0.08), hsl(0, 0%, 40%, 0.08));
+}
+
+.shape-4 {
+  width: 250px;
+  height: 250px;
+  top: 30%;
+  right: 30%;
+  animation-delay: -7s;
+  background: linear-gradient(45deg, hsl(0, 0%, 40%, 0.08), hsl(0, 0%, 20%, 0.08));
+}
+
+/* Animated Grid */
+.grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 30s linear infinite;
   pointer-events: none;
   z-index: -1;
 }
@@ -104,6 +197,43 @@ body::before {
 @keyframes backgroundShift {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+@keyframes particleFloat {
+  0% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(-40px) translateX(-5px); }
+  75% { transform: translateY(-20px) translateX(-10px); }
+  100% { transform: translateY(0px) translateX(0px); }
+}
+
+@keyframes geometricFloat {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+    opacity: 0.3;
+  }
+  25% { 
+    transform: translateY(-30px) translateX(20px) rotate(90deg) scale(1.1);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translateY(-60px) translateX(-10px) rotate(180deg) scale(0.9);
+    opacity: 0.4;
+  }
+  75% { 
+    transform: translateY(-30px) translateX(-20px) rotate(270deg) scale(1.05);
+    opacity: 0.5;
+  }
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 /* Typography Enhancements */
@@ -147,20 +277,22 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 0 1px rgba(139, 92, 246, 0.1);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 0 1px rgba(139, 92, 246, 0.2);
 }
 
 /* Modern Button Styles */

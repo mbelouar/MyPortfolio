@@ -134,8 +134,8 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
           <div className="flex items-center gap-3 ml-4">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             <span className="text-sm font-medium text-foreground">{title}</span>
-          </div>
         </div>
+      </div>
         <div className="flex items-center gap-2">
           <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
           <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
@@ -176,7 +176,7 @@ const AboutApp = () => (
         <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
         <span>Available for Internships</span>
       </div>
-    </div>
+          </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <motion.div
@@ -193,22 +193,22 @@ const AboutApp = () => (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
               <Phone className="w-5 h-5 text-primary" />
-            </div>
+          </div>
             <div>
               <p className="text-sm text-muted-foreground">Phone</p>
               <p className="text-foreground font-medium">+212 688 191 812</p>
-            </div>
+          </div>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
               <Mail className="w-5 h-5 text-primary" />
-            </div>
+        </div>
             <div>
               <p className="text-sm text-muted-foreground">Email</p>
               <p className="text-foreground font-medium">medbelouarraq@gmail.com</p>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+    </div>
       </motion.div>
 
       <motion.div
@@ -226,12 +226,12 @@ const AboutApp = () => (
             <p className="text-foreground font-medium">National School of Applied Sciences</p>
             <p className="text-sm text-muted-foreground">Engineering degree in Computer Science</p>
             <p className="text-xs text-primary">2020 - In Progress</p>
-          </div>
+    </div>
           <div>
             <p className="text-foreground font-medium">UM6P - 1337 MED</p>
             <p className="text-sm text-muted-foreground">Digital Technology Architect</p>
             <p className="text-xs text-primary">2022 - 2025</p>
-          </div>
+  </div>
         </div>
       </motion.div>
     </div>
@@ -258,8 +258,8 @@ const AboutApp = () => (
 // Modern Projects App Component
 const ProjectsApp = () => {
   const projects = [
-    {
-      name: 'SecureAuth - Final Year Project',
+    { 
+      name: 'SecureAuth - Final Year Project', 
       description: 'Designed and implemented an Identity and Access Management (IAM) platform supporting SSO, MFA (TOTP, WebAuthn/FIDO), and identity lifecycle management, deployed with Kubernetes (Minikube, K3s), Docker, and Helm for scalability and resilience.',
       tech: ['Kubernetes', 'Docker', 'Helm', 'k3s', 'Terraform', 'Prometheus', 'Grafana', 'ArgoCD', 'CI/CD', 'Django', 'REST API'],
       year: '2025',
@@ -268,8 +268,8 @@ const ProjectsApp = () => {
       icon: Shield,
       color: 'from-blue-500 to-purple-500'
     },
-    {
-      name: 'IoT - Lightweight Kubernetes Orchestration',
+    { 
+      name: 'IoT - Lightweight Kubernetes Orchestration', 
       description: 'Demonstrated container orchestration using K3s with Vagrant and K3D with ArgoCD, creating and managing lightweight Kubernetes clusters across various environments, from multi-node setups to GitOps-driven CI/CD pipelines.',
       tech: ['K8s', 'k3s', 'k3d', 'Vagrant', 'Docker', 'CI/CD', 'ArgoCD', 'Scripting'],
       year: '2024',
@@ -278,8 +278,8 @@ const ProjectsApp = () => {
       icon: Cloud,
       color: 'from-green-500 to-blue-500'
     },
-    {
-      name: 'Transendence - Multiplayer Gaming Platform',
+    { 
+      name: 'Transendence - Multiplayer Gaming Platform', 
       description: 'Developed a web application for a multiplayer gaming platform featuring user management, blockchain score storage, and AI opponents. Implemented cybersecurity measures, including two-factor authentication and GDPR compliance.',
       tech: ['HTML', 'CSS', 'Bootstrap', 'JavaScript', 'ThreeJS', 'Django', 'Docker', 'Microservices', 'CI/CD', 'PostgreSQL'],
       year: '2024',
@@ -288,8 +288,8 @@ const ProjectsApp = () => {
       icon: Code,
       color: 'from-purple-500 to-pink-500'
     },
-    {
-      name: 'Inception - Containerized Multi-Service System',
+    { 
+      name: 'Inception - Containerized Multi-Service System', 
       description: 'Designed and implemented a secure, multi-service system using Docker containers for Nginx, WordPress, and MariaDB, orchestrated with Docker Compose. Ensured service isolation, seamless communication, and security.',
       tech: ['Docker', 'Docker Compose', 'Nginx', 'WordPress', 'MariaDB', 'Linux'],
       year: '2023',
@@ -298,8 +298,8 @@ const ProjectsApp = () => {
       icon: Layers,
       color: 'from-orange-500 to-red-500'
     },
-    {
-      name: 'NestTools - Community Tool-Rental Platform',
+    { 
+      name: 'NestTools - Community Tool-Rental Platform', 
       description: 'Developed a full-stack web application that connects DIY enthusiasts with local tool owners, enabling users to rent tools at a fraction of the purchase cost. Promotes cost-effective and sustainable access to equipment.',
       tech: ['React', 'Next.js', 'Tailwind CSS', 'TypeScript', 'Laravel', 'Docker', 'Docker Compose'],
       year: '2023',
@@ -322,7 +322,7 @@ const ProjectsApp = () => {
         <p className="text-muted-foreground">Showcasing my technical expertise and innovation</p>
       </div>
 
-      <div className="space-y-6">
+    <div className="space-y-6">
         {projects.map((project, index) => (
           <motion.div
             key={index}
@@ -344,12 +344,12 @@ const ProjectsApp = () => {
                   <div>
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {project.name}
-                      </h3>
+                {project.name}
+              </h3>
                       <span className="px-3 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">
                         {project.type}
-                      </span>
-                    </div>
+                </span>
+            </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <span>{project.year}</span>
                       <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
@@ -369,10 +369,10 @@ const ProjectsApp = () => {
                       whileHover={{ scale: 1.05 }}
                       className="px-3 py-1 text-xs font-medium bg-muted/50 text-muted-foreground rounded-full border border-border/50 hover:border-primary/50 hover:text-primary transition-colors"
                     >
-                      {tech}
+                  {tech}
                     </motion.span>
-                  ))}
-                </div>
+              ))}
+            </div>
               </div>
             </div>
           </motion.div>
@@ -481,8 +481,8 @@ const SkillsApp = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">{skill.icon}</span>
-                    <span className="text-sm font-medium text-foreground">{skill.name}</span>
-                  </div>
+                  <span className="text-sm font-medium text-foreground">{skill.name}</span>
+                </div>
                   <span className="text-sm text-muted-foreground">{skill.level}%</span>
                 </div>
                 <div className="skill-bar">
@@ -514,7 +514,7 @@ const SkillsApp = () => {
             <div className="text-3xl mb-2">🇲🇦</div>
             <p className="text-foreground font-medium">Arabic</p>
             <p className="text-sm text-muted-foreground">Native</p>
-          </div>
+            </div>
           <div className="text-center">
             <div className="text-3xl mb-2">🇫🇷</div>
             <p className="text-foreground font-medium">French</p>
@@ -524,8 +524,8 @@ const SkillsApp = () => {
             <div className="text-3xl mb-2">🇬🇧</div>
             <p className="text-foreground font-medium">English</p>
             <p className="text-sm text-muted-foreground">Professional</p>
+            </div>
           </div>
-        </div>
       </motion.div>
     </motion.div>
   );
@@ -534,9 +534,9 @@ const SkillsApp = () => {
 // Modern Experience App Component
 const ExperienceApp = () => {
   const experiences = [
-    {
-      company: 'E2IP TECHNOLOGIES',
-      role: 'DevOps & IAM Intern',
+    { 
+      company: 'E2IP TECHNOLOGIES', 
+      role: 'DevOps & IAM Intern', 
       period: 'July 2025 - September 2025',
       type: 'Internship',
       description: 'Assisted in deploying and maintaining cloud-native IAM solutions. Automated CI/CD pipelines and monitored system performance with Kubernetes, Docker, and Prometheus.',
@@ -545,9 +545,9 @@ const ExperienceApp = () => {
       color: 'from-blue-500 to-purple-500',
       status: 'Current'
     },
-    {
-      company: 'ADE (Student Association)',
-      role: 'President',
+    { 
+      company: 'ADE (Student Association)', 
+      role: 'President', 
       period: 'January 2024 - March 2025',
       type: 'Leadership',
       description: 'Led the student association representing 1,000+ students in academic and extracurricular initiatives. Organized events, managed budgets, and fostered partnerships with universities and sponsors.',
@@ -556,9 +556,9 @@ const ExperienceApp = () => {
       color: 'from-green-500 to-teal-500',
       status: 'Completed'
     },
-    {
-      company: 'BMCE GROUP',
-      role: 'Software Research Intern',
+    { 
+      company: 'BMCE GROUP', 
+      role: 'Software Research Intern', 
       period: 'June 2023 - August 2023',
       type: 'Internship',
       description: 'Gained hands-on experience in document digitization and data management. Worked on software research projects and contributed to digital transformation initiatives.',
@@ -604,7 +604,7 @@ const ExperienceApp = () => {
       </div>
 
       <div className="space-y-6">
-        {experiences.map((exp, index) => (
+          {experiences.map((exp, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
@@ -620,7 +620,7 @@ const ExperienceApp = () => {
                 <exp.icon className="w-8 h-8 text-white" />
               </motion.div>
               
-              <div className="flex-1">
+                <div className="flex-1">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
@@ -636,12 +636,12 @@ const ExperienceApp = () => {
                         'bg-muted/50 text-muted-foreground'
                       }`}>
                         {exp.status}
-                      </span>
-                    </div>
+                    </span>
+                  </div>
                     <p className="text-lg text-muted-foreground font-medium">{exp.company}</p>
                     <p className="text-sm text-primary">{exp.period}</p>
-                  </div>
                 </div>
+              </div>
                 
                 <p className="text-muted-foreground leading-relaxed mb-4">
                   {exp.description}
@@ -657,12 +657,12 @@ const ExperienceApp = () => {
                       {tech}
                     </motion.span>
                   ))}
-                </div>
+            </div>
               </div>
             </div>
           </motion.div>
-        ))}
-      </div>
+          ))}
+        </div>
     </motion.div>
   );
 };
@@ -721,7 +721,7 @@ const CertificationsApp = () => {
                 {cert.icon}
               </motion.div>
               
-              <div className="flex-1">
+                <div className="flex-1">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
@@ -731,11 +731,11 @@ const CertificationsApp = () => {
                       <span className="px-3 py-1 text-xs font-medium bg-green-500/20 text-green-400 rounded-full">
                         Verified
                       </span>
-                    </div>
+                </div>
                     <p className="text-lg text-muted-foreground font-medium">{cert.issuer}</p>
                     <p className="text-sm text-primary">Issued: {cert.issued}</p>
-                  </div>
-                </div>
+              </div>
+            </div>
                 
                 <p className="text-muted-foreground leading-relaxed mb-4">
                   {cert.description}
@@ -750,14 +750,14 @@ const CertificationsApp = () => {
                     >
                       {skill}
                     </motion.span>
-                  ))}
-                </div>
+          ))}
+        </div>
               </div>
             </div>
           </motion.div>
         ))}
       </div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -773,25 +773,25 @@ const CertificationsApp = () => {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success" />
               <span>Industry-recognized credentials</span>
-            </div>
+          </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success" />
               <span>Validated technical expertise</span>
-            </div>
+          </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success" />
               <span>Enhanced professional credibility</span>
-            </div>
           </div>
+        </div>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success" />
               <span>Up-to-date with latest technologies</span>
-            </div>
+      </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success" />
               <span>Competitive advantage in job market</span>
-            </div>
+    </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-success" />
               <span>Continuous learning commitment</span>
@@ -817,7 +817,7 @@ const ContactApp = () => (
     </div>
     
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Contact Information */}
+    {/* Contact Information */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -895,11 +895,11 @@ const ContactApp = () => (
           >
             <div className="w-12 h-12 rounded-xl bg-gray-500/10 flex items-center justify-center group-hover:bg-gray-500/20 transition-colors">
               <Github className="w-6 h-6 text-gray-400" />
-            </div>
+        </div>
             <div>
               <p className="text-foreground font-medium">GitHub</p>
               <p className="text-sm text-muted-foreground">@mbelouar</p>
-            </div>
+      </div>
           </motion.a>
         </div>
       </motion.div>
@@ -918,21 +918,21 @@ const ContactApp = () => (
       </h3>
       <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Name</label>
-            <input
-              type="text"
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+          <input
+            type="text"
               className="w-full input-modern focus-ring"
-              placeholder="Your name"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Email</label>
-            <input
-              type="email"
+            placeholder="Your name"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">Email</label>
+          <input
+            type="email"
               className="w-full input-modern focus-ring"
-              placeholder="your@email.com"
-            />
+            placeholder="your@email.com"
+          />
           </div>
         </div>
         <div>
@@ -1018,7 +1018,7 @@ const TerminalApp = () => {
           Terminal
         </h2>
         <p className="text-muted-foreground">Interactive command-line interface</p>
-      </div>
+          </div>
 
       <div className="glass-card p-6 rounded-2xl">
         <div className="bg-slate-950 text-green-400 p-6 rounded-xl font-mono text-sm min-h-[400px] shadow-inner">
@@ -1033,24 +1033,24 @@ const TerminalApp = () => {
               {line}
             </motion.div>
           ))}
-          <div className="flex items-center gap-2 mt-4">
+        <div className="flex items-center gap-2 mt-4">
             <span className="text-primary">$</span>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleCommand(input);
-                  setInput('');
-                }
-              }}
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleCommand(input);
+                setInput('');
+              }
+            }}
               className="flex-1 bg-transparent outline-none text-green-400 focus-ring"
-              autoFocus
-            />
-          </div>
+            autoFocus
+          />
         </div>
       </div>
+    </div>
     </motion.div>
   );
 };
@@ -1070,11 +1070,11 @@ const MacOSDock: React.FC<{
       transition={{ duration: 0.8, delay: 0.5 }}
       className="fixed bottom-8 left-0 right-0 flex justify-center z-[9999]"
     >
-      <div className="glass-card p-4 rounded-3xl shadow-glass-hover">
+      <div className="glass-card p-4 rounded-3xl shadow-glass-hover border-white/20">
         <div className="flex items-end gap-4 justify-center">
           {apps.map((app, index) => (
             <motion.div
-              key={app.id}
+            key={app.id}
               className="relative group"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
@@ -1082,18 +1082,18 @@ const MacOSDock: React.FC<{
               whileTap={{ scale: 0.95 }}
             >
               <motion.button
-                onClick={() => onAppClick(app.id)}
+            onClick={() => onAppClick(app.id)}
                 className={`relative w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer glass-card hover:shadow-glow ${
-                  app.id === 'certifications' ? 'ring-2 ring-yellow-400/50 shadow-glow-lg' : ''
+                  app.id === 'certifications' ? 'ring-2 ring-white/60 shadow-glow-lg' : ''
                 }`}
-                style={{
+            style={{
                   transform: hoveredIndex === index ? 'scale(1.1) translateY(-8px)' : 'scale(1)',
-                }}
+            }}
                 whileHover={{ rotate: 5 }}
-              >
-                <img
-                  src={app.icon}
-                  alt={app.name}
+          >
+            <img
+              src={app.icon}
+              alt={app.name}
                   className="w-full h-full object-cover"
                   draggable={false}
                 />
@@ -1109,19 +1109,19 @@ const MacOSDock: React.FC<{
                     exit={{ opacity: 0, y: 10, scale: 0.8 }}
                     transition={{ duration: 0.2 }}
                     className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 glass-card text-white text-xs rounded-lg whitespace-nowrap shadow-glass z-10 ${
-                      app.id === 'certifications' ? 'bg-yellow-500/20 border border-yellow-400/30' : ''
+                      app.id === 'certifications' ? 'bg-white/20 border border-white/40' : ''
                     }`}
                   >
                     {app.name}
                     <div className={`absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${
-                      app.id === 'certifications' ? 'border-t-yellow-400/30' : 'border-t-white/10'
+                      app.id === 'certifications' ? 'border-t-white/40' : 'border-t-white/10'
                     }`} />
                   </motion.div>
                 )}
               </AnimatePresence>
               
               {/* Indicator dot for open apps */}
-              {openApps.includes(app.id) && (
+            {openApps.includes(app.id) && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -1130,8 +1130,8 @@ const MacOSDock: React.FC<{
               )}
             </motion.div>
           ))}
-        </div>
-      </div>
+          </div>
+    </div>
     </motion.div>
   );
 };
@@ -1186,67 +1186,141 @@ const MacOSPortfolio: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden">
-      {/* macOS-style Menu Bar */}
+      {/* Animated Grid Background */}
+      <div className="grid-bg"></div>
+      
+      {/* Geometric Shapes */}
+      <div className="geometric-bg">
+        <div className="geometric-shape shape-1"></div>
+        <div className="geometric-shape shape-2"></div>
+        <div className="geometric-shape shape-3"></div>
+        <div className="geometric-shape shape-4"></div>
+        </div>
+      {/* Enhanced macOS Menu Bar */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="fixed top-0 left-0 right-0 h-8 bg-black/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-4 text-white text-xs z-50"
+        className="fixed top-0 left-0 right-0 h-8 backdrop-blur-xl border-b border-white/20 flex items-center justify-between px-4 text-white text-xs z-50"
       >
         <div className="flex items-center gap-6">
           {/* Apple Logo */}
-          <div className="w-4 h-4 flex items-center justify-center">
+          <motion.div 
+            whileHover={{ scale: 1.1 }}
+            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
+          >
             <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
               <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
             </svg>
-          </div>
+          </motion.div>
           
           {/* App Name */}
-          <span className="font-semibold text-sm">Portfolio</span>
+          <span className="font-semibold text-sm text-white/90">Portfolio</span>
           
           {/* Menu Items */}
-          <div className="flex items-center gap-6 text-muted-foreground">
-            <span className="hover:text-white transition-colors cursor-pointer">File</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Edit</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Selection</span>
-            <span className="hover:text-white transition-colors cursor-pointer">View</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Go</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Run</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Terminal</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Window</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Help</span>
-          </div>
+          <div className="flex items-center gap-5 text-white/70">
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              File
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              Edit
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              Selection
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              View
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              Go
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              Run
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              Terminal
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              Window
+            </motion.span>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+            >
+              Help
+            </motion.span>
         </div>
-        
+      </div>
+
         {/* System Indicators */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Control Center */}
-          <div className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded">
+        <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
+          >
             <div className="w-3 h-3 border border-white/60 rounded-sm"></div>
-          </div>
+          </motion.div>
           
           {/* Wi-Fi */}
-          <div className="w-4 h-4 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
+          <motion.div 
+            whileHover={{ scale: 1.1 }}
+            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white/80">
               <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
             </svg>
-          </div>
+          </motion.div>
           
           {/* Battery */}
-          <div className="w-6 h-3 border border-white/60 rounded-sm relative">
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="w-6 h-3 border border-white/60 rounded-sm relative cursor-pointer hover:bg-white/10 transition-colors"
+          >
             <div className="absolute right-0 top-0.5 w-0.5 h-2 bg-white/60 rounded-r-sm"></div>
-            <div className="w-full h-full bg-green-500 rounded-sm"></div>
-          </div>
+            <div className="w-full h-full bg-gradient-to-r from-green-400 to-green-500 rounded-sm"></div>
+          </motion.div>
           
           {/* Search */}
-          <div className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded">
-            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
+          <motion.div 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white/80">
               <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
             </svg>
-          </div>
+          </motion.div>
           
           {/* Time */}
-          <span className="text-xs text-white font-medium">{time}</span>
+          <span className="text-xs text-white/90 font-medium px-2 py-1 rounded-sm hover:bg-white/10 cursor-pointer transition-colors">
+            {time}
+          </span>
         </div>
       </motion.div>
 
@@ -1265,25 +1339,25 @@ const MacOSPortfolio: React.FC = () => {
             className="text-6xl md:text-8xl font-bold text-white mb-8 leading-tight"
           >
             Welcome to my<br />
-            <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent">
               Portfolio OS
             </span>
           </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+        
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-xl text-muted-foreground mb-12 leading-relaxed"
           >
             Final-year Computer Engineering Student & DevOps Enthusiast<br />
             <span className="text-primary">Specialized in Kubernetes, Docker, and Cloud Infrastructure</span>
-          </motion.p>
+        </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
             className="flex items-center justify-center gap-2 text-muted-foreground text-sm animate-bounce-gentle"
           >
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
@@ -1295,20 +1369,20 @@ const MacOSPortfolio: React.FC = () => {
 
       {/* Enhanced Windows */}
       <AnimatePresence>
-        {openWindows.map((appId, index) => {
-          const app = apps.find(a => a.id === appId);
-          return (
-            <Window
-              key={appId}
-              id={appId}
-              title={app?.name || ''}
-              onClose={() => handleCloseWindow(appId)}
-              initialPosition={{ x: 100 + index * 30, y: 100 + index * 30 }}
-            >
-              {getAppComponent(appId)}
-            </Window>
-          );
-        })}
+      {openWindows.map((appId, index) => {
+        const app = apps.find(a => a.id === appId);
+        return (
+          <Window
+            key={appId}
+            id={appId}
+            title={app?.name || ''}
+            onClose={() => handleCloseWindow(appId)}
+            initialPosition={{ x: 100 + index * 30, y: 100 + index * 30 }}
+          >
+            {getAppComponent(appId)}
+          </Window>
+        );
+      })}
       </AnimatePresence>
 
       {/* Enhanced Dock */}
