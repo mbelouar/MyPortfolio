@@ -1068,10 +1068,10 @@ const MacOSDock: React.FC<{
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 }}
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999]"
+      className="fixed bottom-8 left-0 right-0 flex justify-center z-[9999]"
     >
       <div className="glass-card p-4 rounded-3xl shadow-glass-hover">
-        <div className="flex items-end gap-4">
+        <div className="flex items-end gap-4 justify-center">
           {apps.map((app, index) => (
             <motion.div
               key={app.id}
