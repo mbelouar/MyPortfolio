@@ -255,68 +255,10 @@ const AboutApp = () => (
       </div>
           </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="glass-card p-6 rounded-2xl"
-      >
-        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <User className="w-5 h-5 text-primary" />
-          Contact Information
-        </h3>
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Phone className="w-5 h-5 text-primary" />
-          </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Phone</p>
-              <p className="text-foreground font-medium">+212 688 191 812</p>
-          </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Mail className="w-5 h-5 text-primary" />
-        </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Email</p>
-              <p className="text-foreground font-medium">medbelouarraq@gmail.com</p>
-      </div>
-    </div>
-    </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="glass-card p-6 rounded-2xl"
-      >
-        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-primary" />
-          Education
-        </h3>
-        <div className="space-y-3">
-          <div>
-            <p className="text-foreground font-medium">National School of Applied Sciences</p>
-            <p className="text-sm text-muted-foreground">Engineering degree in Computer Science</p>
-            <p className="text-xs text-primary">2020 - In Progress</p>
-    </div>
-          <div>
-            <p className="text-foreground font-medium">UM6P - 1337 MED</p>
-            <p className="text-sm text-muted-foreground">Digital Technology Architect</p>
-            <p className="text-xs text-primary">2022 - 2025</p>
-  </div>
-        </div>
-      </motion.div>
-    </div>
-
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.5 }}
+      transition={{ duration: 0.6, delay: 0.3 }}
       className="glass-card p-6 rounded-2xl"
     >
       <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
@@ -328,6 +270,79 @@ const AboutApp = () => (
         Skilled in problem-solving, teamwork, and project management, and always eager to explore new tools and practices in the DevOps & Cloud ecosystem. 
         Open to internship opportunities to apply and expand my skills in real-world IT environments.
       </p>
+    </motion.div>
+
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className="glass-card p-6 rounded-2xl"
+    >
+      <h3 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
+        <Calendar className="w-5 h-5 text-primary" />
+        Education & Academic Journey
+      </h3>
+  <div className="space-y-6">
+        <div className="flex items-start gap-4">
+          <div className="w-20 h-20 rounded-xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg p-1">
+            <img 
+              src="/images/ensate.png" 
+              alt="École Nationale des Sciences Appliquées de Tétouan"
+              className="w-full h-full object-contain scale-125"
+            />
+      </div>
+      <div className="flex-1">
+            <h4 className="text-lg font-semibold text-foreground mb-1">National School of Applied Sciences</h4>
+            <p className="text-primary font-medium mb-2">Computer Science Engineering Student</p>
+            <p className="text-sm text-muted-foreground mb-2">Specialized in Software Engineering, DevOps, and Cloud Computing</p>
+            <div className="flex items-center gap-4 text-xs">
+              <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full">2020 - 2025</span>
+              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full">Final Year</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex items-start gap-4">
+          <div className="w-20 h-20 rounded-xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg p-1">
+            <img 
+              src="/images/UM6P_1337.png" 
+              alt="1337 CODING SCHOOL"
+              className="w-full h-full object-contain scale-125"
+            />
+          </div>
+          <div className="flex-1">
+            <h4 className="text-lg font-semibold text-foreground mb-1">UM6P - 1337 MED</h4>
+            <p className="text-primary font-medium mb-2">Digital Technology Architect Program</p>
+            <p className="text-sm text-muted-foreground mb-2">Advanced programming, software architecture, and modern development practices</p>
+            <div className="flex items-center gap-4 text-xs">
+              <span className="px-2 py-1 bg-teal-500/20 text-teal-400 rounded-full">2022 - 2025</span>
+              <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded-full">Specialized Program</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="pt-4 border-t border-gray-700/30">
+          <h5 className="text-sm font-semibold text-foreground mb-3">Key Academic Achievements</h5>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary"></div>
+              <span className="text-muted-foreground">Strong foundation in Computer Science fundamentals</span>
+          </div>
+          <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary"></div>
+              <span className="text-muted-foreground">Hands-on experience with DevOps tools and practices</span>
+          </div>
+          <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary"></div>
+              <span className="text-muted-foreground">Advanced programming and software architecture</span>
+          </div>
+          <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary"></div>
+              <span className="text-muted-foreground">Cloud computing and containerization expertise</span>
+          </div>
+        </div>
+      </div>
+    </div>
     </motion.div>
   </motion.div>
 );
@@ -643,28 +658,6 @@ const ExperienceApp = () => {
       icon: Code,
       color: 'from-orange-500 to-red-500',
       status: 'Completed'
-    },
-    {
-      company: 'National School of Applied Sciences',
-      role: 'Computer Engineering Student',
-      period: '2020 - In Progress',
-      type: 'Education',
-      description: 'Pursuing Engineering degree in Computer Science with focus on DevOps, Cloud Computing, and Software Development. Maintaining strong academic performance while engaging in practical projects.',
-      technologies: ['Computer Science', 'Engineering', 'Academic Projects', 'Research'],
-      icon: Award,
-      color: 'from-purple-500 to-pink-500',
-      status: 'Ongoing'
-    },
-    {
-      company: 'UM6P - 1337 MED',
-      role: 'Digital Technology Architect',
-      period: '2022 - 2025',
-      type: 'Specialized Program',
-      description: 'Enrolled in specialized program focusing on digital technology architecture, advanced programming, and modern software development practices.',
-      technologies: ['Digital Architecture', 'Advanced Programming', 'Software Development'],
-      icon: Layers,
-      color: 'from-teal-500 to-green-500',
-      status: 'Ongoing'
     }
   ];
 
@@ -753,8 +746,8 @@ const CertificationsApp = () => {
       issued: 'September 2025',
       description: 'Comprehensive certification covering Kubernetes fundamentals, cloud-native concepts, and container orchestration.',
       skills: ['Kubernetes', 'Cloud Native', 'Container Orchestration', 'DevOps'],
-      icon: '☸️',
-      color: 'from-blue-500 to-purple-500',
+      logo: '/images/KCNA-Logo.png',
+      color: 'from-white to-gray-100',
       verified: true
     },
     {
@@ -763,8 +756,8 @@ const CertificationsApp = () => {
       issued: 'June 2025',
       description: 'Professional certification demonstrating expertise in Docker containerization, image management, and container orchestration.',
       skills: ['Docker', 'Containerization', 'Image Management', 'Container Orchestration'],
-      icon: '🐳',
-      color: 'from-green-500 to-teal-500',
+      logo: '/images/docker2.png',
+      color: 'from-white to-gray-100',
       verified: true
     }
   ];
@@ -793,9 +786,13 @@ const CertificationsApp = () => {
             <div className="flex items-start gap-6">
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
-                className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${cert.color} flex items-center justify-center flex-shrink-0 shadow-glow text-3xl`}
+                className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${cert.color} flex items-center justify-center flex-shrink-0 shadow-glow p-3`}
               >
-                {cert.icon}
+                <img 
+                  src={cert.logo} 
+                  alt={`${cert.name} logo`}
+                  className={`w-full h-full object-contain ${cert.name.includes('Kubernetes') || cert.name.includes('Docker') ? '' : 'filter brightness-0 invert'}`}
+                />
               </motion.div>
               
                 <div className="flex-1">
@@ -1509,8 +1506,8 @@ const MacOSPortfolio: React.FC = () => {
           className="text-center max-w-4xl"
         >
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-6xl md:text-8xl font-bold text-white mb-8 leading-tight"
           >
