@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { 
   Briefcase, 
   Github,
@@ -233,9 +234,13 @@ const AboutApp = () => (
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="w-32 h-32 mx-auto mb-6 rounded-3xl bg-gradient-primary flex items-center justify-center text-white text-4xl font-bold shadow-glow-lg pulse-glow"
+        className="w-32 h-32 mx-auto mb-6 rounded-3xl overflow-hidden shadow-glow-lg pulse-glow"
       >
-        MB
+        <img
+          src="/images/med.png"
+          alt="Mohammed Bel Ouarraq"
+          className="w-full h-full object-cover"
+        />
       </motion.div>
       <h1 className="text-4xl font-bold text-foreground mb-2">BEL OUARRAQ MOHAMMED</h1>
       <p className="text-xl text-muted-foreground mb-4">Final-year Computer Engineering Student</p>
