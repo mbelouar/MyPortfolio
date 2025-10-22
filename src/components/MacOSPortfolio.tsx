@@ -1527,13 +1527,16 @@ const MacOSPortfolio: React.FC = () => {
           </motion.div>
           
           {/* Battery */}
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="w-6 h-3 border border-white/60 rounded-sm relative cursor-pointer hover:bg-white/10 transition-colors"
-          >
-            <div className="absolute right-0 top-0.5 w-0.5 h-2 bg-white/60 rounded-r-sm"></div>
-            <div className="w-full h-full bg-gradient-to-r from-green-400 to-green-500 rounded-sm"></div>
-          </motion.div>
+          <div className="flex items-center gap-1 text-white/80 text-xs">
+            <div className="relative">
+              <svg width="16" height="10" viewBox="0 0 16 10" className="fill-current">
+                <rect x="0.5" y="1.5" width="13" height="7" rx="1.5" ry="1.5" fill="none" stroke="currentColor" strokeWidth="1"/>
+                <rect x="14" y="3" width="1" height="4" rx="0.5" ry="0.5" fill="currentColor"/>
+                <rect x="1" y="2" width="12" height="6" rx="1" ry="1" fill="currentColor" opacity="0.8"/>
+              </svg>
+            </div>
+            <span className="text-[10px]">85%</span>
+          </div>
           
           {/* Search */}
           <motion.div 
