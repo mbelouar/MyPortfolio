@@ -259,17 +259,25 @@ const AboutApp = () => (
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="glass-card p-6 rounded-2xl"
+      className="glass-card p-6 rounded-2xl hover:shadow-glass-hover transition-all duration-300 group"
     >
-      <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-        <Star className="w-5 h-5 text-primary" />
-        Professional Profile
-      </h3>
+      <div className="flex items-center gap-3 mb-4">
+        <User className="w-5 h-5 text-primary" />
+        <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">Professional Profile</h3>
+      </div>
+      
       <p className="text-muted-foreground leading-relaxed">
-        DevOps & Cloud enthusiast with a strong foundation in technology and programming, developed through hands-on training and projects. 
+        <span className="text-foreground font-medium">DevOps & Cloud enthusiast</span> with a strong foundation in technology and programming, developed through hands-on training and projects. 
         Skilled in problem-solving, teamwork, and project management, and always eager to explore new tools and practices in the DevOps & Cloud ecosystem. 
-        Open to internship opportunities to apply and expand my skills in real-world IT environments.
+        <span className="text-primary font-medium">Open to internship opportunities</span> to apply and expand my skills in real-world IT environments.
       </p>
+      
+      <div className="mt-4 flex flex-wrap gap-2">
+        <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">DevOps</span>
+        <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">Cloud</span>
+        <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">Problem Solving</span>
+        <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">Teamwork</span>
+      </div>
     </motion.div>
 
     <motion.div
@@ -315,8 +323,8 @@ const AboutApp = () => (
             <p className="text-primary font-medium mb-2">Digital Technology Architect Program</p>
             <p className="text-sm text-muted-foreground mb-2">Advanced programming, software architecture, and modern development practices</p>
             <div className="flex items-center gap-4 text-xs">
-              <span className="px-2 py-1 bg-teal-500/20 text-teal-400 rounded-full">2022 - 2025</span>
-              <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded-full">Specialized Program</span>
+              <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full">2022 - 2025</span>
+              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full">Specialized Program</span>
             </div>
           </div>
         </div>
@@ -358,7 +366,8 @@ const ProjectsApp = () => {
       type: 'Final Year Project',
       status: 'Completed',
       icon: Shield,
-      color: 'from-blue-500 to-purple-500'
+      color: 'from-blue-500 to-purple-500',
+      github: 'https://github.com/mbelouar/SecureAuth'
     },
     { 
       name: 'IoT - Lightweight Kubernetes Orchestration', 
@@ -368,7 +377,8 @@ const ProjectsApp = () => {
       type: 'Academic Project',
       status: 'Completed',
       icon: Cloud,
-      color: 'from-green-500 to-blue-500'
+      color: 'from-green-500 to-blue-500',
+      github: 'https://github.com/mbelouar/IoT-K8s-Orchestration'
     },
     { 
       name: 'Transendence - Multiplayer Gaming Platform', 
@@ -378,7 +388,8 @@ const ProjectsApp = () => {
       type: 'Academic Project',
       status: 'Completed',
       icon: Code,
-      color: 'from-purple-500 to-pink-500'
+      color: 'from-purple-500 to-pink-500',
+      github: 'https://github.com/mbelouar/Transendence'
     },
     { 
       name: 'Inception - Containerized Multi-Service System', 
@@ -388,7 +399,8 @@ const ProjectsApp = () => {
       type: 'Academic Project',
       status: 'Completed',
       icon: Layers,
-      color: 'from-orange-500 to-red-500'
+      color: 'from-orange-500 to-red-500',
+      github: 'https://github.com/mbelouar/Inception'
     },
     { 
       name: 'NestTools - Community Tool-Rental Platform', 
@@ -398,7 +410,8 @@ const ProjectsApp = () => {
       type: 'Academic Project',
       status: 'Completed',
       icon: Database,
-      color: 'from-teal-500 to-green-500'
+      color: 'from-teal-500 to-green-500',
+      github: 'https://github.com/mbelouar/NestTools'
     }
   ];
 
@@ -426,28 +439,38 @@ const ProjectsApp = () => {
             <div className="flex items-start gap-6">
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
-                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.color} flex items-center justify-center flex-shrink-0 shadow-glow`}
+                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.color} flex items-center justify-center flex-shrink-0 shadow-lg`}
               >
                 <project.icon className="w-8 h-8 text-white" />
               </motion.div>
               
               <div className="flex-1">
                 <div className="flex items-start justify-between mb-4">
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                 {project.name}
               </h3>
-                      <span className="px-3 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">
-                        {project.type}
-                </span>
             </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{project.year}</span>
+                      <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full">{project.year}</span>
                       <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-                      <span className="text-success">{project.status}</span>
+                      <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full">{project.status}</span>
                     </div>
                   </div>
+                  
+                  <motion.a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-600 hover:border-gray-500 group"
+                  >
+                    <Github className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                    <span className="text-sm font-medium">View Code</span>
+                    <ExternalLink className="w-3 h-3 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+                  </motion.a>
                 </div>
                 
                 <p className="text-muted-foreground leading-relaxed mb-4">
@@ -458,8 +481,11 @@ const ProjectsApp = () => {
                   {project.tech.map((tech, techIndex) => (
                     <motion.span
                       key={techIndex}
-                      whileHover={{ scale: 1.05 }}
-                      className="px-3 py-1 text-xs font-medium bg-muted/50 text-muted-foreground rounded-full border border-border/50 hover:border-primary/50 hover:text-primary transition-colors"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: techIndex * 0.05 }}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      className="px-3 py-1 text-xs font-medium bg-gray-800/50 text-gray-300 rounded-full border border-gray-700/50 hover:border-primary/50 hover:text-primary hover:bg-primary/10 transition-all duration-300"
                     >
                   {tech}
                     </motion.span>
@@ -635,7 +661,8 @@ const ExperienceApp = () => {
       technologies: ['Kubernetes', 'Docker', 'Prometheus', 'CI/CD', 'IAM Solutions'],
       icon: Briefcase,
       color: 'from-blue-500 to-purple-500',
-      status: 'Current'
+      status: 'Completed',
+      logo: '/images/e2ip.png'
     },
     { 
       company: 'ADE (Student Association)', 
@@ -646,7 +673,8 @@ const ExperienceApp = () => {
       technologies: ['Leadership', 'Project Management', 'Event Organization', 'Budget Management'],
       icon: User,
       color: 'from-green-500 to-teal-500',
-      status: 'Completed'
+      status: 'Completed',
+      logo: '/images/ade.png'
     },
     { 
       company: 'BMCE GROUP', 
@@ -657,7 +685,8 @@ const ExperienceApp = () => {
       technologies: ['Document Digitization', 'Data Management', 'Software Research'],
       icon: Code,
       color: 'from-orange-500 to-red-500',
-      status: 'Completed'
+      status: 'Completed',
+      logo: '/images/bmce.png'
     }
   ];
 
@@ -685,33 +714,41 @@ const ExperienceApp = () => {
             <div className="flex items-start gap-6">
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
-                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${exp.color} flex items-center justify-center flex-shrink-0 shadow-glow`}
+                className={`w-16 h-16 rounded-2xl ${exp.logo ? 'bg-white shadow-lg border-2 border-gray-200' : `bg-gradient-to-br ${exp.color}`} flex items-center justify-center flex-shrink-0 shadow-glow`}
               >
-                <exp.icon className="w-8 h-8 text-white" />
+                {exp.logo ? (
+                  <img 
+                    src={exp.logo} 
+                    alt={`${exp.company} logo`}
+                    className="w-10 h-10 object-contain"
+                  />
+                ) : (
+                  <exp.icon className="w-8 h-8 text-white" />
+                )}
               </motion.div>
               
                 <div className="flex-1">
                 <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {exp.role}
-                      </h3>
-                      <span className="px-3 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">
-                        {exp.type}
-                      </span>
-                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                        exp.status === 'Current' ? 'bg-green-500/20 text-green-400' :
-                        exp.status === 'Ongoing' ? 'bg-blue-500/20 text-blue-400' :
-                        'bg-muted/50 text-muted-foreground'
-                      }`}>
-                        {exp.status}
-                    </span>
-                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
+                      {exp.role}
+                    </h3>
                     <p className="text-lg text-muted-foreground font-medium">{exp.company}</p>
                     <p className="text-sm text-primary">{exp.period}</p>
+                  </div>
+                  <div className="flex flex-col gap-2 ml-4">
+                    <span className="px-3 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">
+                      {exp.type}
+                    </span>
+                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                      exp.status === 'Current' ? 'bg-green-500/20 text-green-400' :
+                      exp.status === 'Ongoing' ? 'bg-blue-500/20 text-blue-400' :
+                      'bg-green-500/20 text-green-400'
+                    }`}>
+                      {exp.status}
+                    </span>
+                  </div>
                 </div>
-              </div>
                 
                 <p className="text-muted-foreground leading-relaxed mb-4">
                   {exp.description}
@@ -727,8 +764,8 @@ const ExperienceApp = () => {
                       {tech}
                     </motion.span>
                   ))}
-            </div>
               </div>
+            </div>
             </div>
           </motion.div>
           ))}
@@ -1086,21 +1123,35 @@ const TerminalApp = () => {
       transition={{ duration: 0.6 }}
       className="space-y-6"
     >
-      <div className="glass-card p-6 rounded-2xl">
-        <div className="bg-slate-950 text-green-400 p-6 rounded-xl font-mono text-sm min-h-[400px] shadow-inner">
+      <div className="bg-gradient-to-br from-gray-900 via-gray-950 to-black text-green-400 p-6 rounded-xl font-mono text-sm min-h-[400px] shadow-2xl border border-gray-800/50 relative overflow-hidden">
+        {/* Terminal Header */}
+        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-700/30">
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+          <span className="text-gray-400 text-xs ml-4">portfolio-terminal</span>
+        </div>
+        
+        {/* Terminal Content */}
+        <div className="space-y-1">
           {output.map((line, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="mb-1"
+              className={`mb-1 ${line.startsWith('$') ? 'text-blue-400' : line.includes('Command not found') ? 'text-red-400' : 'text-green-400'}`}
             >
               {line}
             </motion.div>
           ))}
-        <div className="flex items-center gap-2 mt-4">
-            <span className="text-primary">$</span>
+        </div>
+        
+        {/* Terminal Input */}
+        <div className="flex items-center gap-2 mt-4 pt-2 border-t border-gray-700/30">
+          <span className="text-blue-400 font-bold">$</span>
           <input
             type="text"
             value={input}
@@ -1111,12 +1162,17 @@ const TerminalApp = () => {
                 setInput('');
               }
             }}
-              className="flex-1 bg-transparent outline-none text-green-400 focus-ring"
+            className="flex-1 bg-transparent outline-none text-green-400 placeholder-gray-500 focus:text-green-300 transition-colors"
+            placeholder="Type a command..."
             autoFocus
+          />
+          <motion.div
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ duration: 1, repeat: Infinity }}
+            className="w-2 h-4 bg-green-400"
           />
         </div>
       </div>
-    </div>
     </motion.div>
   );
 };
