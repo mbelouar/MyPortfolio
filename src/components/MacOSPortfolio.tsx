@@ -236,10 +236,13 @@ const AboutApp = () => (
         transition={{ duration: 0.5, delay: 0.2 }}
         className="w-32 h-32 mx-auto mb-6 rounded-3xl overflow-hidden shadow-glow-lg pulse-glow"
       >
-        <img
+        <Image
           src="/images/med.png"
           alt="Mohammed Bel Ouarraq"
+          width={128}
+          height={128}
           className="w-full h-full object-cover"
+          priority
         />
       </motion.div>
       <h1 className="text-4xl font-bold text-foreground mb-2">BEL OUARRAQ MOHAMMED</h1>
@@ -1316,7 +1319,12 @@ const MacOSPortfolio: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden">
+    <motion.div 
+      className="min-h-screen w-full relative overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Interactive Background Elements */}
       <div className="floating-element"></div>
       <div className="floating-element"></div>
@@ -1497,13 +1505,13 @@ const MacOSPortfolio: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center max-w-4xl"
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             className="text-6xl md:text-8xl font-bold text-white mb-8 leading-tight"
           >
             Welcome to my<br />
@@ -1569,7 +1577,7 @@ const MacOSPortfolio: React.FC = () => {
         onAppClick={handleAppClick}
         openApps={openWindows}
       />
-    </div>
+    </motion.div>
   );
 };
 
