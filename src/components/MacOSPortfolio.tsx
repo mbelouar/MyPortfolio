@@ -39,17 +39,28 @@ interface WindowProps {
   onClose: () => void;
   children: React.ReactNode;
   initialPosition?: { x: number; y: number };
+  isMinimized?: boolean;
+  onMinimize?: (minimized: boolean) => void;
 }
 
 // Enhanced Window Component with Modern Design
-const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPosition = { x: 100, y: 100 } }) => {
+const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPosition = { x: 100, y: 100 }, isMinimized = false, onMinimize }) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isMaximized, setIsMaximized] = useState(false);
+  const [zIndex, setZIndex] = useState(10);
   const windowRef = useRef<HTMLDivElement>(null);
 
+  // Bring window to front when clicked
+  const bringToFront = () => {
+    setZIndex(100);
+  };
+
   const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent text selection
+    e.stopPropagation(); // Stop event bubbling
+    
     if (windowRef.current) {
       const rect = windowRef.current.getBoundingClientRect();
       setDragOffset({
@@ -57,6 +68,10 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
         y: e.clientY - rect.top
       });
       setIsDragging(true);
+      
+      // Prevent text selection during drag
+      document.body.style.userSelect = 'none';
+      document.body.style.cursor = 'grabbing';
     }
   };
 
@@ -72,6 +87,10 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
 
     const handleMouseUp = () => {
       setIsDragging(false);
+      
+      // Restore normal cursor and text selection
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
     };
 
     if (isDragging) {
@@ -85,67 +104,117 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
     };
   }, [isDragging, dragOffset]);
 
+  // Cleanup effect to restore cursor and text selection
+  useEffect(() => {
+    return () => {
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+    };
+  }, []);
+
   return (
     <motion.div
       ref={windowRef}
-      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      initial={{ opacity: 0, scale: 0.9, y: 50 }}
       animate={{ 
-        opacity: 1, 
-        scale: 1, 
-        y: isMaximized ? 0 : position.y,
+        opacity: isMinimized ? 0 : 1, 
+        scale: isMinimized ? 0.8 : 1, 
+        y: isMaximized ? 0 : (isMinimized ? window.innerHeight + 100 : position.y),
         x: isMaximized ? 0 : position.x,
-        width: isMaximized ? '100vw' : '700px',
+        width: isMaximized ? '100vw' : '750px',
         height: isMaximized ? '100vh' : 'auto',
-        maxHeight: isMaximized ? '100vh' : '85vh'
+        maxHeight: isMaximized ? '100vh' : '90vh'
       }}
-      exit={{ opacity: 0, scale: 0.8, y: 20 }}
+      exit={{ opacity: 0, scale: 0.8, y: 50 }}
       transition={{ 
         type: "spring", 
-        damping: 25, 
-        stiffness: 300,
-        duration: 0.4
+        damping: 30, 
+        stiffness: 400,
+        duration: 0.5
       }}
-      className="fixed glass-card rounded-2xl overflow-hidden shadow-glass-hover z-50"
+      className="fixed glass-card rounded-2xl overflow-hidden shadow-2xl cursor-default"
       style={{
         left: isMaximized ? 0 : position.x,
         top: isMaximized ? 0 : position.y,
-        width: isMaximized ? '100vw' : '700px',
+        width: isMaximized ? '100vw' : '750px',
         maxWidth: '95vw',
-        maxHeight: isMaximized ? '100vh' : '85vh',
+        maxHeight: isMaximized ? '100vh' : '90vh',
+        zIndex: zIndex,
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(20px)',
+        background: 'rgba(0, 0, 0, 0.8)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+      }}
+      onClick={(e) => {
+        if (isMinimized) {
+          e.stopPropagation();
+          onMinimize?.(false);
+        } else {
+          bringToFront();
+        }
       }}
     >
-      {/* Modern Window Header */}
+      {/* Dark macOS Window Header */}
       <div
-        className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-card/80 to-card/60 backdrop-blur-xl border-b border-border/50 cursor-move"
+        className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-gray-800/90 to-gray-900/80 backdrop-blur-xl border-b border-gray-700/30 cursor-grab hover:from-gray-700/90 hover:to-gray-800/80 transition-all duration-200 select-none"
         onMouseDown={handleMouseDown}
+        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div className="flex gap-2">
+            {/* Close Button */}
             <button
-              onClick={onClose}
-              className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 transition-all duration-200 hover:scale-110 shadow-sm"
-            />
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              className="window-control-btn close group"
+              title="Close"
+            >
+              <div className="window-control-icon close" />
+            </button>
+            
+            {/* Minimize Button */}
             <button 
-              onClick={() => setIsMaximized(!isMaximized)}
-              className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-all duration-200 hover:scale-110 shadow-sm"
-            />
-            <button className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 transition-all duration-200 hover:scale-110 shadow-sm" />
+              onClick={(e) => {
+                e.stopPropagation();
+                onMinimize?.(!isMinimized);
+              }}
+              className="window-control-btn minimize group"
+              title="Minimize"
+            >
+              <div className="window-control-icon minimize" />
+            </button>
+            
+            {/* Maximize Button */}
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMaximized(!isMaximized);
+              }}
+              className="window-control-btn maximize group"
+              title="Maximize"
+            >
+              <div className="window-control-icon maximize" />
+            </button>
           </div>
-          <div className="flex items-center gap-3 ml-4">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-medium text-foreground">{title}</span>
+          <div className="flex items-center gap-2 ml-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-pulse" />
+            <span className="text-sm font-medium text-gray-200 tracking-wide">{title}</span>
         </div>
       </div>
-        <div className="flex items-center gap-2">
-          <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-          <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-          <div className="w-1 h-1 rounded-full bg-muted-foreground/50" />
+        <div className="flex items-center gap-1">
+          <div className="w-1 h-1 rounded-full bg-gray-500/60" />
+          <div className="w-1 h-1 rounded-full bg-gray-500/60" />
+          <div className="w-1 h-1 rounded-full bg-gray-500/60" />
         </div>
       </div>
       
-      {/* Window Content */}
-      <div className="p-8 overflow-auto max-h-[calc(85vh-80px)] scrollbar-thin scrollbar-thumb-primary/30 scrollbar-track-transparent">
+      {/* Dark Window Content */}
+      <div className="p-8 bg-gradient-to-br from-gray-900/20 to-transparent overflow-auto max-h-[calc(90vh-100px)] scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent select-text">
+        <div className="space-y-6">
         {children}
+        </div>
       </div>
     </motion.div>
   );
@@ -1012,14 +1081,6 @@ const TerminalApp = () => {
       transition={{ duration: 0.6 }}
       className="space-y-6"
     >
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
-          <TerminalIcon className="w-8 h-8 text-primary" />
-          Terminal
-        </h2>
-        <p className="text-muted-foreground">Interactive command-line interface</p>
-          </div>
-
       <div className="glass-card p-6 rounded-2xl">
         <div className="bg-slate-950 text-green-400 p-6 rounded-xl font-mono text-sm min-h-[400px] shadow-inner">
           {output.map((line, index) => (
@@ -1142,6 +1203,7 @@ const MacOSPortfolio: React.FC = () => {
   const [time, setTime] = useState('');
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isMouseMoving, setIsMouseMoving] = useState(false);
+  const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
   const mouseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -1188,14 +1250,51 @@ const MacOSPortfolio: React.FC = () => {
     { id: 'terminal', name: 'Terminal', icon: 'https://cdn.jim-nielsen.com/macos/1024/terminal-2021-06-03.png?rf=1024', color: 'gray' },
   ];
 
+  // Smart window positioning - centered and visible
+  const getSmartPosition = (windowId: string) => {
+    const basePositions = {
+      about: { x: 50, y: 50 },
+      certifications: { x: 100, y: 80 },
+      projects: { x: 150, y: 110 },
+      skills: { x: 200, y: 140 },
+      experience: { x: 250, y: 170 },
+      contact: { x: 300, y: 200 },
+      terminal: { x: 350, y: 230 }
+    };
+    
+    const basePos = basePositions[windowId as keyof typeof basePositions] || { x: 50, y: 50 };
+    
+    // Ensure windows stay within visible bounds with responsive sizing
+    const windowWidth = Math.min(750, window.innerWidth - 100);
+    const windowHeight = Math.min(600, window.innerHeight - 100);
+    const maxX = Math.max(0, window.innerWidth - windowWidth);
+    const maxY = Math.max(0, window.innerHeight - windowHeight);
+    
+    return {
+      x: Math.min(basePos.x, maxX),
+      y: Math.min(basePos.y, maxY)
+    };
+  };
+
   const handleAppClick = (appId: string) => {
-    if (!openWindows.includes(appId)) {
-      setOpenWindows([...openWindows, appId]);
+    // If window is minimized, restore it
+    if (minimizedWindows.includes(appId)) {
+      setMinimizedWindows(minimizedWindows.filter(id => id !== appId));
+      return;
     }
+    
+    // If window is already open, bring it to front (do nothing as it's already visible)
+    if (openWindows.includes(appId)) {
+      return;
+    }
+    
+    // Open new window
+    setOpenWindows([...openWindows, appId]);
   };
 
   const handleCloseWindow = (appId: string) => {
     setOpenWindows(openWindows.filter(id => id !== appId));
+    setMinimizedWindows(minimizedWindows.filter(id => id !== appId));
   };
 
   const getAppComponent = (appId: string) => {
@@ -1268,7 +1367,10 @@ const MacOSPortfolio: React.FC = () => {
           {/* Apple Logo */}
           <motion.div 
             whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setOpenWindows([])}
             className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
+            title="Close All Windows"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white">
               <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
@@ -1432,13 +1534,23 @@ const MacOSPortfolio: React.FC = () => {
       <AnimatePresence>
       {openWindows.map((appId, index) => {
         const app = apps.find(a => a.id === appId);
+        const position = getSmartPosition(appId);
+        const isMinimized = minimizedWindows.includes(appId);
         return (
           <Window
             key={appId}
             id={appId}
             title={app?.name || ''}
             onClose={() => handleCloseWindow(appId)}
-            initialPosition={{ x: 100 + index * 30, y: 100 + index * 30 }}
+            initialPosition={position}
+            isMinimized={isMinimized}
+            onMinimize={(minimized) => {
+              if (minimized) {
+                setMinimizedWindows([...minimizedWindows, appId]);
+              } else {
+                setMinimizedWindows(minimizedWindows.filter(id => id !== appId));
+              }
+            }}
           >
             {getAppComponent(appId)}
           </Window>
