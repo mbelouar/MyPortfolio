@@ -79,15 +79,19 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: 
-    radial-gradient(ellipse at top left, hsl(0, 0%, 8%) 0%, hsl(0, 0%, 4%) 30%, hsl(0, 0%, 2%) 70%, hsl(0, 0%, 1%) 100%),
-    linear-gradient(135deg, hsl(0, 0%, 6%) 0%, hsl(0, 0%, 3%) 50%, hsl(0, 0%, 1%) 100%);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  background-image: url('/macos.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: #1a1a2e; /* Fallback color */
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
 }
 
-/* Professional Background Overlay */
+/* macOS Wallpaper Overlay */
 body::before {
   content: '';
   position: fixed;
@@ -96,10 +100,8 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 20% 20%, hsl(0, 0%, 100%, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, hsl(0, 0%, 100%, 0.015) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, hsl(0, 0%, 100%, 0.01) 0%, transparent 60%);
-  animation: subtlePulse 20s ease-in-out infinite;
+    /* Very subtle dark overlay for text readability */
+    linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.1) 100%);
   pointer-events: none;
   z-index: -1;
 }
