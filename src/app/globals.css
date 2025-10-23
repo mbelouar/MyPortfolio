@@ -506,8 +506,8 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 /* Enhanced macOS Window Control Buttons */
 .window-control-btn {
   position: relative;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -519,6 +519,13 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  transform-origin: center;
+  pointer-events: auto;
+  z-index: 10;
 }
 
 .window-control-btn::before {
@@ -528,7 +535,7 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.1s ease;
 }
 
 .window-control-btn:hover::before {
@@ -536,56 +543,278 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 }
 
 .window-control-btn:active {
-  transform: scale(0.85);
+  transform: scale(0.9);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     0 1px 1px rgba(0, 0, 0, 0.3);
+  transition: all 0.05s ease;
 }
 
 .window-control-btn.close {
   background: linear-gradient(135deg, #ff5f57 0%, #ff3b30 100%);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .window-control-btn.close:hover {
   background: linear-gradient(135deg, #ff3b30 0%, #d70015 100%);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 2px 8px rgba(255, 59, 48, 0.4);
-  transform: scale(1.05);
+    0 2px 8px rgba(255, 59, 48, 0.4),
+    0 4px 16px rgba(255, 59, 48, 0.2);
+  transform: scale(1.05) translateY(-1px);
 }
 
 .window-control-btn.close:active {
   background: linear-gradient(135deg, #d70015 0%, #b30000 100%);
-  transform: scale(0.85);
+  transform: scale(0.95);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.05s ease;
 }
+
 
 .window-control-btn.minimize {
   background: linear-gradient(135deg, #ffbd2e 0%, #ff9500 100%);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .window-control-btn.minimize:hover {
   background: linear-gradient(135deg, #ff9500 0%, #ff8c00 100%);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 2px 8px rgba(255, 189, 46, 0.4);
+    0 2px 8px rgba(255, 189, 46, 0.4),
+    0 4px 16px rgba(255, 189, 46, 0.2);
+  transform: scale(1.03) translateY(-0.5px);
+}
+
+.window-control-btn.minimize:active {
+  background: linear-gradient(135deg, #ff8c00 0%, #ff7f00 100%);
+  transform: scale(0.97);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.05s ease;
 }
 
 .window-control-btn.maximize {
   background: linear-gradient(135deg, #28ca42 0%, #30d158 100%);
-  transition: all 0.15s ease-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .window-control-btn.maximize:hover {
   background: linear-gradient(135deg, #30d158 0%, #32d74b 100%);
-  transform: scale(1.02);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 2px 8px rgba(40, 202, 66, 0.4),
+    0 4px 16px rgba(40, 202, 66, 0.2);
+  transform: scale(1.04) translateY(-0.5px);
 }
 
 .window-control-btn.maximize:active {
   background: linear-gradient(135deg, #1ea832 0%, #28ca42 100%);
-  transform: scale(0.98);
+  transform: scale(0.96);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.05s ease;
+}
+
+.window-control-btn.maximize.restored {
+  animation: pulse-restore 0.6s ease-out;
+}
+
+.window-control-btn.maximize.maximized {
+  animation: pulse-maximize 0.6s ease-out;
+}
+
+/* Enhanced maximize button animations */
+@keyframes maximizeButtonPress {
+  0% {
+    transform: scale(1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 8px 20px rgba(40, 202, 66, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.window-control-btn.maximize:active {
+  animation: maximizeButtonPress 0.3s ease-out;
+}
+
+/* Keyframe animations for button transitions */
+@keyframes pulse-restore {
+  0% {
+    transform: scale(1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 4px 12px rgba(40, 202, 66, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes pulse-maximize {
+  0% {
+    transform: scale(1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      0 6px 16px rgba(40, 202, 66, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Window transition effects */
+.maximized-window {
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.glass-card {
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Smooth fullscreen transition */
+.maximized-window {
+  animation: maximizeWindow 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes maximizeWindow {
+  0% {
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+  100% {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* Button press ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.window-control-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+.window-control-btn:active::after {
+  animation: ripple 0.15s ease-out;
+}
+
+/* Prevent drag interference with control buttons */
+.window-control-btn,
+.window-control-btn * {
+  pointer-events: auto !important;
+  user-select: none !important;
+  touch-action: manipulation !important;
+}
+
+/* Ensure control button container doesn't interfere */
+.window-control-btn {
+  isolation: isolate;
+  position: relative;
+  z-index: 1000;
+}
+
+/* Prevent animation conflicts */
+.window-control-btn:focus {
+  outline: none;
+}
+
+.window-control-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Window header dragging area */
+.window-header {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.window-header:active {
+  cursor: grabbing;
+}
+
+/* Smooth window dragging - simplified */
+.window-dragging {
+  transition: none !important;
+}
+
+/* Ensure no transitions during drag */
+.window-dragging * {
+  transition: none !important;
+}
+
+/* Ensure window header is the only draggable area */
+.window-header * {
+  pointer-events: auto;
+}
+
+/* Window content should not trigger dragging */
+.window-content {
+  pointer-events: auto;
+  cursor: default;
+}
+
+/* Prevent content from interfering with window dragging */
+.window-content * {
+  pointer-events: auto;
 }
 
 /* Enhanced Button Icons */
@@ -608,7 +837,7 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 .window-control-icon.close::after {
   content: '×';
   color: #4a0000;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   transform: translateY(-0.5px);
@@ -618,13 +847,37 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 .window-control-icon.minimize::after {
   content: '−';
   color: #8b5a00;
-  font-size: 8px;
+  font-size: 10px;
   line-height: 1;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   transform: translateY(-0.5px);
 }
 
 .window-control-icon.maximize::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  border: 1px solid #0d4f0d;
+  background: transparent;
+}
+
+.window-control-btn.maximize.restored .window-control-icon.maximize::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  border: 1px solid #0d4f0d;
+  background: transparent;
+}
+
+.window-control-btn.maximize.maximized .window-control-icon.maximize::after {
   content: '';
   position: absolute;
   top: 50%;
