@@ -1332,16 +1332,22 @@ const MacOSPortfolio: React.FC = () => {
     };
   }, []);
 
-  // Handle window resize to recalculate positions
+  // Handle window resize to recalculate positions with debouncing
   useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout;
+    
     const handleResize = () => {
-      // Force re-render to recalculate window positions
-      setOpenWindows([...openWindows]);
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Force re-render to recalculate window positions
+        setOpenWindows([...openWindows]);
+      }, 150); // Debounce resize events
     };
 
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
     };
   }, [openWindows]);
 
@@ -1399,49 +1405,96 @@ const MacOSPortfolio: React.FC = () => {
     { id: 'terminal', name: 'Terminal', icon: 'https://cdn.jim-nielsen.com/macos/1024/terminal-2021-06-03.png?rf=1024', color: 'gray' },
   ];
 
-  // Smart window positioning - avoiding dock overlap
+  // Enhanced window positioning - optimal placement and collision avoidance
   const getSmartPosition = (windowId: string) => {
     // Dock dimensions and positioning
-    const dockHeight = 80; // Approximate dock height
-    const dockBottomMargin = 32; // Bottom margin
+    const dockHeight = 80;
+    const dockBottomMargin = 32;
     const dockTotalHeight = dockHeight + dockBottomMargin;
     
-    // Window dimensions with responsive sizing - larger and more comfortable
-    const windowWidth = Math.min(800, window.innerWidth - 100);
-    const windowHeight = Math.min(700, window.innerHeight - dockTotalHeight - 100);
+    // Window dimensions with responsive sizing
+    const windowWidth = Math.min(800, window.innerWidth - 120);
+    const windowHeight = Math.min(700, window.innerHeight - dockTotalHeight - 120);
     
-    // Available space calculation (excluding dock area) - larger windows
-    const availableWidth = window.innerWidth - 100; // 50px margin on each side
-    const availableHeight = window.innerHeight - dockTotalHeight - 100; // Exclude dock area and margins
+    // Available space calculation (excluding dock area and margins)
+    const availableWidth = window.innerWidth - 120; // 60px margin on each side
+    const availableHeight = window.innerHeight - dockTotalHeight - 120; // Exclude dock area and margins
     
-    // Center windows in available space with staggered positioning
-    const centerX = Math.max(50, (availableWidth - windowWidth) / 2);
-    const centerY = Math.max(50, (availableHeight - windowHeight) / 2);
+    // Calculate optimal center position
+    const centerX = Math.max(60, (availableWidth - windowWidth) / 2);
+    const centerY = Math.max(60, (availableHeight - windowHeight) / 2);
     
-    // Staggered positioning for multiple windows - larger windows
-    const staggerOffset = 50;
+    // Enhanced staggered positioning with better distribution
+    const staggerOffset = 60;
+    const verticalOffset = 80;
+    
     const basePositions = {
       about: { x: centerX, y: centerY },
-      certifications: { x: centerX + staggerOffset, y: centerY + staggerOffset },
-      projects: { x: centerX - staggerOffset, y: centerY + staggerOffset * 2 },
-      skills: { x: centerX + staggerOffset * 2, y: centerY - staggerOffset },
-      experience: { x: centerX - staggerOffset * 2, y: centerY + staggerOffset * 3 },
-      contact: { x: centerX + staggerOffset * 3, y: centerY + staggerOffset },
-      terminal: { x: centerX - staggerOffset * 3, y: centerY + staggerOffset * 4 }
+      certifications: { x: centerX + staggerOffset, y: centerY + verticalOffset },
+      projects: { x: centerX - staggerOffset, y: centerY + verticalOffset * 1.5 },
+      skills: { x: centerX + staggerOffset * 1.5, y: centerY - verticalOffset * 0.5 },
+      experience: { x: centerX - staggerOffset * 1.5, y: centerY + verticalOffset * 2 },
+      contact: { x: centerX + staggerOffset * 2, y: centerY + verticalOffset * 0.5 },
+      terminal: { x: centerX - staggerOffset * 2, y: centerY + verticalOffset * 2.5 }
     };
     
     const basePos = basePositions[windowId as keyof typeof basePositions] || { x: centerX, y: centerY };
     
-    // Ensure windows stay within visible bounds and don't overlap with dock
-    const maxX = Math.max(50, availableWidth - windowWidth + 50);
-    const maxY = Math.max(50, availableHeight - windowHeight + 50);
+    // Enhanced boundary checking with better margins
+    const minX = 60;
+    const minY = 60;
+    const maxX = Math.max(minX, availableWidth - windowWidth + 60);
+    const maxY = Math.max(minY, availableHeight - windowHeight + 60);
     
-    // Additional check to ensure windows don't go below dock area
-    const finalY = Math.min(basePos.y, maxY);
+    // Ensure windows stay within visible bounds with proper margins
+    const finalX = Math.min(Math.max(basePos.x, minX), maxX);
+    const finalY = Math.min(Math.max(basePos.y, minY), maxY);
     
     return {
-      x: Math.min(Math.max(basePos.x, 50), maxX),
-      y: Math.max(50, finalY) // Ensure minimum top margin
+      x: finalX,
+      y: finalY
+    };
+  };
+
+  // Simple and reliable window positioning with proper offset
+  const getOptimalPosition = (windowId: string, existingWindows: string[]) => {
+    const windowWidth = Math.min(800, window.innerWidth - 120);
+    const windowHeight = Math.min(700, window.innerHeight - 112 - 120);
+    
+    // Get the index of current window in the open windows array
+    const windowIndex = existingWindows.indexOf(windowId);
+    
+    // Define offset amounts for proper spacing
+    const offsetX = 50;  // Horizontal offset between windows
+    const offsetY = 50;  // Vertical offset between windows
+    
+    // Calculate position with all windows from 2nd onwards on same horizontal line
+    let x, y;
+    
+    if (windowIndex === 0) {
+      // First window: top-left position
+      x = 50;
+      y = 20;
+    } else {
+      // All other windows: same horizontal line
+      const horizontalOffset = 50;
+      x = 100 + ((windowIndex - 1) * horizontalOffset);
+      y = 70; // All windows from 2nd onwards have same Y position
+    }
+    
+    // Ensure position is within bounds - adjusted for higher and left positioning
+    const maxX = Math.max(50, window.innerWidth - windowWidth - 50);
+    const maxY = Math.max(20, window.innerHeight - 112 - windowHeight - 20);
+    
+    // If window would go off-screen, adjust position
+    const finalX = x > maxX ? 50 : x;
+    const finalY = y > maxY ? 20 : y;
+    
+    console.log(`Window ${windowId} (index: ${windowIndex}) positioned at:`, { x: finalX, y: finalY });
+    
+    return {
+      x: Math.min(finalX, maxX),
+      y: Math.min(finalY, maxY)
     };
   };
 
@@ -1452,18 +1505,27 @@ const MacOSPortfolio: React.FC = () => {
       return;
     }
     
-    // If window is already open, bring it to front (do nothing as it's already visible)
+    // If window is already open, bring it to front
     if (openWindows.includes(appId)) {
+      // Move to end of array to bring to front and reposition
+      const otherWindows = openWindows.filter(id => id !== appId);
+      setOpenWindows([...otherWindows, appId]);
       return;
     }
     
-    // Open new window
+    // Open new window - it will be positioned with proper offset
     setOpenWindows([...openWindows, appId]);
   };
 
   const handleCloseWindow = (appId: string) => {
-    setOpenWindows(openWindows.filter(id => id !== appId));
+    const newOpenWindows = openWindows.filter(id => id !== appId);
+    setOpenWindows(newOpenWindows);
     setMinimizedWindows(minimizedWindows.filter(id => id !== appId));
+    
+    // Trigger repositioning of remaining windows
+    setTimeout(() => {
+      setOpenWindows([...newOpenWindows]);
+    }, 100);
   };
 
   const getAppComponent = (appId: string) => {
@@ -1744,7 +1806,7 @@ const MacOSPortfolio: React.FC = () => {
       <AnimatePresence>
       {openWindows.map((appId, index) => {
         const app = apps.find(a => a.id === appId);
-        const position = getSmartPosition(appId);
+        const position = getOptimalPosition(appId, openWindows);
         const isMinimized = minimizedWindows.includes(appId);
         return (
           <Window
