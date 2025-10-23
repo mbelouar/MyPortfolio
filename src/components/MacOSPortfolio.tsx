@@ -1188,7 +1188,7 @@ const TerminalApp = () => {
   );
 };
 
-// Enhanced Dock Component with Auto-Hide
+// Enhanced macOS Dock Component with Authentic Styling
 const MacOSDock: React.FC<{
   apps: DockApp[];
   onAppClick: (appId: string) => void;
@@ -1208,79 +1208,121 @@ const MacOSDock: React.FC<{
         scale: isVisible ? 1 : 0.95
       }}
       transition={{ 
-        duration: 0.2, 
-        ease: "easeOut",
-        delay: isVisible ? 0 : 0
+        duration: 0.3, 
+        ease: [0.25, 0.46, 0.45, 0.94]
       }}
-      className="fixed bottom-8 left-0 right-0 flex justify-center z-[1000]"
+      className="fixed bottom-6 left-0 right-0 flex justify-center z-[1000]"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="glass-card p-4 rounded-3xl shadow-glass-hover border-white/20">
-        <div className="flex items-end gap-4 justify-center">
-          {apps.map((app, index) => (
-            <motion.div
-            key={app.id}
-              className="relative group dock-app"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.button
-            onClick={() => onAppClick(app.id)}
-                className={`relative w-16 h-16 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer glass-card hover:shadow-glow ${
-                  app.id === 'certifications' ? 'ring-2 ring-white/60 shadow-glow-lg' : ''
-                }`}
-            style={{
-                  transform: hoveredIndex === index ? 'scale(1.1) translateY(-8px)' : 'scale(1)',
-            }}
-                whileHover={{ rotate: 5 }}
-          >
-            <img
-              src={app.icon}
-              alt={app.name}
-                  className="w-full h-full object-cover"
-                  draggable={false}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </motion.button>
-              
-              {/* macOS-style dot indicator for opened apps */}
-              {openApps.includes(app.id) && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full shadow-sm"
-                />
-              )}
-              
-              {/* App name tooltip */}
-              <AnimatePresence>
-                {hoveredIndex === index && (
+      {/* Authentic macOS Dock Background */}
+      <div className="relative">
+        {/* Dock Background with macOS styling */}
+        <div className="relative dock-background rounded-2xl shadow-2xl">
+          {/* Inner dock background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-white/10 rounded-2xl overflow-hidden"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/10 rounded-2xl overflow-hidden"></div>
+          
+          {/* Dock container */}
+          <div className="relative px-6 py-2">
+            <div className="flex items-center justify-center gap-2">
+              {apps.map((app, index) => {
+                const isOpen = openApps.includes(app.id);
+                const isHovered = hoveredIndex === index;
+                const scale = isHovered ? 1.15 : isOpen ? 1.05 : 1;
+                const translateY = isHovered ? -8 : 0;
+                
+                return (
                   <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                    transition={{ duration: 0.2 }}
-                    className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 glass-card text-white text-xs rounded-lg whitespace-nowrap shadow-glass z-10 ${
-                      app.id === 'certifications' ? 'bg-white/20 border border-white/40' : ''
-                    }`}
+                    key={app.id}
+                    className="relative flex flex-col items-center group"
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    initial={{ scale: 1, y: 0 }}
+                    animate={{ 
+                      scale: scale,
+                      y: translateY
+                    }}
+                    transition={{ 
+                      duration: 0.25,
+                      ease: [0.25, 0.46, 0.45, 0.94]
+                    }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    {app.name}
-                    <div className={`absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${
-                      app.id === 'certifications' ? 'border-t-white/40' : 'border-t-white/10'
-                    }`} />
+                    {/* App Icon Container */}
+                    <motion.button
+                      onClick={() => onAppClick(app.id)}
+                      className={`relative w-16 h-16 rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${
+                        isHovered ? 'dock-icon-glow' : ''
+                      }`}
+                      style={{
+                        filter: isHovered ? 'brightness(1.1) saturate(1.2)' : 'brightness(1) saturate(1)',
+                      }}
+                    >
+                      {/* Icon Background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-xl"></div>
+                      
+                      {/* App Icon */}
+                      <img
+                        src={app.icon}
+                        alt={app.name}
+                        className="w-full h-full object-cover rounded-xl"
+                        draggable={false}
+                      />
+                      
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      
+                      {/* Reflection Effect */}
+                      <div className="dock-icon-reflection"></div>
+                    </motion.button>
+                    
+                    {/* Running App Indicator */}
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full shadow-sm"
+                        />
+                      )}
+                    </AnimatePresence>
+                    
+                    {/* App Name Tooltip */}
+                    <AnimatePresence>
+                      {isHovered && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8, scale: 0.8 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 8, scale: 0.8 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute -top-10 left-0 right-0 flex justify-center"
+                        >
+                          <div className="relative px-2 py-1 glass-card text-white text-[10px] rounded-md whitespace-nowrap">
+                            {app.name}
+                            {/* Tooltip Triangle */}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent" style={{ borderTopColor: 'rgba(255, 255, 255, 0.08)' }}></div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    
                   </motion.div>
-                )}
-              </AnimatePresence>
-              
-            </motion.div>
-          ))}
+                );
+              })}
+            </div>
           </div>
-    </div>
+          
+          {/* Dock Bottom Reflection */}
+          <div className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-b from-white/10 to-transparent rounded-b-2xl"></div>
+        </div>
+        
+        {/* Dock Shadow */}
+        <div className="absolute inset-0 bg-black/20 rounded-2xl blur-xl -z-10 scale-105"></div>
+        
+      </div>
     </motion.div>
   );
 };
