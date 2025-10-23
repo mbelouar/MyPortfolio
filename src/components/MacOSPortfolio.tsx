@@ -133,18 +133,27 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
         stiffness: 400,
         duration: 0.5
       }}
-      className="fixed glass-card rounded-2xl overflow-hidden shadow-2xl cursor-default"
+      className={`fixed overflow-hidden cursor-default ${
+        isMaximized ? 'rounded-none flex flex-col maximized-window' : 'glass-card rounded-2xl shadow-2xl'
+      }`}
       style={{
         left: isMaximized ? 0 : position.x,
         top: isMaximized ? 0 : position.y,
+        right: isMaximized ? 0 : 'auto',
+        bottom: isMaximized ? 0 : 'auto',
         width: isMaximized ? '100vw' : '800px',
-        maxWidth: '95vw',
+        maxWidth: isMaximized ? '100vw' : '95vw',
+        height: isMaximized ? '100vh' : 'auto',
         maxHeight: isMaximized ? '100vh' : '700px',
-        zIndex: zIndex,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+        minHeight: isMaximized ? '100vh' : 'auto',
+        zIndex: isMaximized ? 999 : zIndex,
+        margin: 0,
+        padding: 0,
+        boxShadow: isMaximized ? 'none' : '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(20px)',
         background: 'rgba(0, 0, 0, 0.8)',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
+        border: isMaximized ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+        position: 'fixed'
       }}
       onClick={(e) => {
         if (isMinimized) {
@@ -212,7 +221,9 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
       </div>
       
       {/* Dark Window Content */}
-      <div className="p-8 bg-gradient-to-br from-gray-900/20 to-transparent overflow-auto max-h-[calc(700px-100px)] scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent select-text">
+      <div className={`bg-gradient-to-br from-gray-900/20 to-transparent overflow-auto scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent select-text ${
+        isMaximized ? 'flex-1 p-6 window-content' : 'max-h-[calc(700px-100px)] p-8'
+      }`}>
         <div className="space-y-6">
         {children}
         </div>
@@ -1201,7 +1212,7 @@ const MacOSDock: React.FC<{
         ease: "easeOut",
         delay: isVisible ? 0 : 0
       }}
-      className="fixed bottom-8 left-0 right-0 flex justify-center z-[9999]"
+      className="fixed bottom-8 left-0 right-0 flex justify-center z-[1000]"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -1362,12 +1373,12 @@ const MacOSPortfolio: React.FC = () => {
     }
   }, [openWindows.length, isDockHovered]);
 
-  // Mouse movement detection for dock reveal - faster response
+  // Mouse movement detection for dock reveal - show dock even with maximized windows
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const isNearBottom = e.clientY > window.innerHeight - 80; // 80px from bottom for faster response
       
-      if (isNearBottom && openWindows.length > 0) {
+      if (isNearBottom) {
         setIsDockVisible(true);
         setIsDockHovered(true);
         
