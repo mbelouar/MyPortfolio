@@ -1197,7 +1197,7 @@ const MacOSDock: React.FC<{
           {apps.map((app, index) => (
             <motion.div
             key={app.id}
-              className="relative group"
+              className="relative group dock-app"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               whileHover={{ scale: 1.1 }}
@@ -1222,6 +1222,17 @@ const MacOSDock: React.FC<{
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </motion.button>
               
+              {/* macOS-style dot indicator for opened apps */}
+              {openApps.includes(app.id) && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full shadow-sm"
+                />
+              )}
+              
               {/* App name tooltip */}
               <AnimatePresence>
                 {hoveredIndex === index && (
@@ -1242,14 +1253,6 @@ const MacOSDock: React.FC<{
                 )}
               </AnimatePresence>
               
-              {/* Indicator dot for open apps */}
-            {openApps.includes(app.id) && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-primary shadow-glow" 
-                />
-              )}
             </motion.div>
           ))}
           </div>
@@ -1277,26 +1280,38 @@ const MacOSPortfolio: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Interactive cursor effects
+  // Enhanced interactive cursor effects with smoother movement
   useEffect(() => {
+    let animationFrame: number;
+    
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-      setIsMouseMoving(true);
-      
-      if (mouseTimeoutRef.current) {
-        clearTimeout(mouseTimeoutRef.current);
+      // Cancel previous animation frame for smoother updates
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
       }
       
-      mouseTimeoutRef.current = setTimeout(() => {
-        setIsMouseMoving(false);
-      }, 100);
+      animationFrame = requestAnimationFrame(() => {
+        setCursorPosition({ x: e.clientX, y: e.clientY });
+        setIsMouseMoving(true);
+        
+        if (mouseTimeoutRef.current) {
+          clearTimeout(mouseTimeoutRef.current);
+        }
+        
+        mouseTimeoutRef.current = setTimeout(() => {
+          setIsMouseMoving(false);
+        }, 150); // Slightly longer timeout for smoother feel
+      });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       if (mouseTimeoutRef.current) {
         clearTimeout(mouseTimeoutRef.current);
+      }
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
       }
     };
   }, []);
@@ -1378,50 +1393,83 @@ const MacOSPortfolio: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Interactive Background Elements */}
+      {/* Enhanced Interactive Background Elements */}
       <div className="floating-element"></div>
       <div className="floating-element"></div>
       <div className="floating-element"></div>
       <div className="floating-element"></div>
       
-      {/* Parallax Elements */}
+      {/* Enhanced Parallax Elements */}
       <div className="parallax-element"></div>
       <div className="parallax-element"></div>
       <div className="parallax-element"></div>
       
-      {/* Light Waves */}
-      <div className="light-wave"></div>
-      <div className="light-wave"></div>
-      <div className="light-wave"></div>
       
-      {/* Interactive Cursor Glow */}
+      {/* Elegant Ambient Lighting */}
+      <motion.div
+        className="absolute top-1/3 left-1/4 w-40 h-40 rounded-full bg-gradient-radial from-white/5 to-transparent pointer-events-none"
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-32 h-32 rounded-full bg-gradient-radial from-white/4 to-transparent pointer-events-none"
+        animate={{
+          scale: [1.05, 0.95, 1.05],
+          opacity: [0.15, 0.3, 0.15],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 5,
+        }}
+      />
+      
+      {/* Enhanced Interactive Cursor Glow */}
       <motion.div
         className="cursor-glow"
         style={{
-          left: cursorPosition.x - 150,
-          top: cursorPosition.y - 150,
+          transform: `translate(${cursorPosition.x - 200}px, ${cursorPosition.y - 200}px)`,
         }}
         animate={{
           opacity: isMouseMoving ? 0.3 : 0,
           scale: isMouseMoving ? 1 : 0.8,
         }}
-        transition={{ duration: 0.3 }}
+        transition={{ 
+          duration: 0.2,
+          ease: "easeOut",
+          opacity: { duration: 0.3, ease: "easeInOut" },
+          scale: { duration: 0.2, ease: "easeOut" }
+        }}
       />
       
-      {/* Interactive Cursor Trail */}
-      {isMouseMoving && (
-        <motion.div
-          className="cursor-trail"
-          style={{
-            left: cursorPosition.x - 10,
-            top: cursorPosition.y - 10,
-          }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
-          transition={{ duration: 0.2 }}
-        />
-      )}
+      {/* Enhanced Interactive Cursor Trail */}
+      <AnimatePresence>
+        {isMouseMoving && (
+          <motion.div
+            className="cursor-trail"
+            style={{
+              transform: `translate(${cursorPosition.x - 12}px, ${cursorPosition.y - 12}px)`,
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ 
+              duration: 0.1,
+              ease: "easeOut",
+              opacity: { duration: 0.15, ease: "easeInOut" },
+              scale: { duration: 0.1, ease: "easeOut" }
+            }}
+          />
+        )}
+      </AnimatePresence>
       {/* Enhanced macOS Menu Bar */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
