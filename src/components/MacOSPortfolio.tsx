@@ -122,9 +122,9 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
         scale: isMinimized ? 0.8 : 1, 
         y: isMaximized ? 0 : (isMinimized ? window.innerHeight + 100 : position.y),
         x: isMaximized ? 0 : position.x,
-        width: isMaximized ? '100vw' : '750px',
+        width: isMaximized ? '100vw' : '800px',
         height: isMaximized ? '100vh' : 'auto',
-        maxHeight: isMaximized ? '100vh' : '90vh'
+        maxHeight: isMaximized ? '100vh' : '700px'
       }}
       exit={{ opacity: 0, scale: 0.8, y: 50 }}
       transition={{ 
@@ -137,9 +137,9 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
       style={{
         left: isMaximized ? 0 : position.x,
         top: isMaximized ? 0 : position.y,
-        width: isMaximized ? '100vw' : '750px',
+        width: isMaximized ? '100vw' : '800px',
         maxWidth: '95vw',
-        maxHeight: isMaximized ? '100vh' : '90vh',
+        maxHeight: isMaximized ? '100vh' : '700px',
         zIndex: zIndex,
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(20px)',
@@ -212,7 +212,7 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
       </div>
       
       {/* Dark Window Content */}
-      <div className="p-8 bg-gradient-to-br from-gray-900/20 to-transparent overflow-auto max-h-[calc(90vh-100px)] scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent select-text">
+      <div className="p-8 bg-gradient-to-br from-gray-900/20 to-transparent overflow-auto max-h-[calc(700px-100px)] scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent select-text">
         <div className="space-y-6">
         {children}
         </div>
@@ -1177,20 +1177,33 @@ const TerminalApp = () => {
   );
 };
 
-// Enhanced Dock Component
+// Enhanced Dock Component with Auto-Hide
 const MacOSDock: React.FC<{
   apps: DockApp[];
   onAppClick: (appId: string) => void;
   openApps: string[];
-}> = ({ apps, onAppClick, openApps }) => {
+  isVisible: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}> = ({ apps, onAppClick, openApps, isVisible, onMouseEnter, onMouseLeave }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <motion.div 
       initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.5 }}
+      animate={{ 
+        opacity: isVisible ? 1 : 0, 
+        y: isVisible ? 0 : 50,
+        scale: isVisible ? 1 : 0.95
+      }}
+      transition={{ 
+        duration: 0.2, 
+        ease: "easeOut",
+        delay: isVisible ? 0 : 0
+      }}
       className="fixed bottom-8 left-0 right-0 flex justify-center z-[9999]"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <div className="glass-card p-4 rounded-3xl shadow-glass-hover border-white/20">
         <div className="flex items-end gap-4 justify-center">
@@ -1268,7 +1281,10 @@ const MacOSPortfolio: React.FC = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isMouseMoving, setIsMouseMoving] = useState(false);
   const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
+  const [isDockVisible, setIsDockVisible] = useState(true);
+  const [isDockHovered, setIsDockHovered] = useState(false);
   const mouseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const dockTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const updateTime = () => {
@@ -1316,6 +1332,63 @@ const MacOSPortfolio: React.FC = () => {
     };
   }, []);
 
+  // Handle window resize to recalculate positions
+  useEffect(() => {
+    const handleResize = () => {
+      // Force re-render to recalculate window positions
+      setOpenWindows([...openWindows]);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [openWindows]);
+
+  // Dock auto-hide logic - hide instantly when windows are open, show on hover
+  useEffect(() => {
+    if (openWindows.length > 0 && !isDockHovered) {
+      // Hide dock instantly when windows are open
+      setIsDockVisible(false);
+    } else {
+      // Show dock when no windows are open or when hovered
+      setIsDockVisible(true);
+    }
+  }, [openWindows.length, isDockHovered]);
+
+  // Mouse movement detection for dock reveal - faster response
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const isNearBottom = e.clientY > window.innerHeight - 80; // 80px from bottom for faster response
+      
+      if (isNearBottom && openWindows.length > 0) {
+        setIsDockVisible(true);
+        setIsDockHovered(true);
+        
+        // Clear any existing timeout
+        if (dockTimeoutRef.current) {
+          clearTimeout(dockTimeoutRef.current);
+        }
+        
+        // Set timeout to hide dock again when mouse moves away - faster hide
+        dockTimeoutRef.current = setTimeout(() => {
+          setIsDockHovered(false);
+          if (openWindows.length > 0) {
+            setIsDockVisible(false);
+          }
+        }, 1500); // Hide after 1.5 seconds of no hover (faster)
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (dockTimeoutRef.current) {
+        clearTimeout(dockTimeoutRef.current);
+      }
+    };
+  }, [openWindows.length]);
+
   const apps: DockApp[] = [
     { id: 'about', name: 'About Me', icon: 'https://cdn.jim-nielsen.com/macos/1024/finder-2021-09-10.png?rf=1024', color: 'blue' },
     { id: 'certifications', name: 'Certifications', icon: 'https://cdn.jim-nielsen.com/macos/1024/messages-2021-05-25.png?rf=1024', color: 'yellow' },
@@ -1326,29 +1399,49 @@ const MacOSPortfolio: React.FC = () => {
     { id: 'terminal', name: 'Terminal', icon: 'https://cdn.jim-nielsen.com/macos/1024/terminal-2021-06-03.png?rf=1024', color: 'gray' },
   ];
 
-  // Smart window positioning - centered and visible
+  // Smart window positioning - avoiding dock overlap
   const getSmartPosition = (windowId: string) => {
+    // Dock dimensions and positioning
+    const dockHeight = 80; // Approximate dock height
+    const dockBottomMargin = 32; // Bottom margin
+    const dockTotalHeight = dockHeight + dockBottomMargin;
+    
+    // Window dimensions with responsive sizing - larger and more comfortable
+    const windowWidth = Math.min(800, window.innerWidth - 100);
+    const windowHeight = Math.min(700, window.innerHeight - dockTotalHeight - 100);
+    
+    // Available space calculation (excluding dock area) - larger windows
+    const availableWidth = window.innerWidth - 100; // 50px margin on each side
+    const availableHeight = window.innerHeight - dockTotalHeight - 100; // Exclude dock area and margins
+    
+    // Center windows in available space with staggered positioning
+    const centerX = Math.max(50, (availableWidth - windowWidth) / 2);
+    const centerY = Math.max(50, (availableHeight - windowHeight) / 2);
+    
+    // Staggered positioning for multiple windows - larger windows
+    const staggerOffset = 50;
     const basePositions = {
-      about: { x: 50, y: 50 },
-      certifications: { x: 100, y: 80 },
-      projects: { x: 150, y: 110 },
-      skills: { x: 200, y: 140 },
-      experience: { x: 250, y: 170 },
-      contact: { x: 300, y: 200 },
-      terminal: { x: 350, y: 230 }
+      about: { x: centerX, y: centerY },
+      certifications: { x: centerX + staggerOffset, y: centerY + staggerOffset },
+      projects: { x: centerX - staggerOffset, y: centerY + staggerOffset * 2 },
+      skills: { x: centerX + staggerOffset * 2, y: centerY - staggerOffset },
+      experience: { x: centerX - staggerOffset * 2, y: centerY + staggerOffset * 3 },
+      contact: { x: centerX + staggerOffset * 3, y: centerY + staggerOffset },
+      terminal: { x: centerX - staggerOffset * 3, y: centerY + staggerOffset * 4 }
     };
     
-    const basePos = basePositions[windowId as keyof typeof basePositions] || { x: 50, y: 50 };
+    const basePos = basePositions[windowId as keyof typeof basePositions] || { x: centerX, y: centerY };
     
-    // Ensure windows stay within visible bounds with responsive sizing
-    const windowWidth = Math.min(750, window.innerWidth - 100);
-    const windowHeight = Math.min(600, window.innerHeight - 100);
-    const maxX = Math.max(0, window.innerWidth - windowWidth);
-    const maxY = Math.max(0, window.innerHeight - windowHeight);
+    // Ensure windows stay within visible bounds and don't overlap with dock
+    const maxX = Math.max(50, availableWidth - windowWidth + 50);
+    const maxY = Math.max(50, availableHeight - windowHeight + 50);
+    
+    // Additional check to ensure windows don't go below dock area
+    const finalY = Math.min(basePos.y, maxY);
     
     return {
-      x: Math.min(basePos.x, maxX),
-      y: Math.min(basePos.y, maxY)
+      x: Math.min(Math.max(basePos.x, 50), maxX),
+      y: Math.max(50, finalY) // Ensure minimum top margin
     };
   };
 
@@ -1675,11 +1768,14 @@ const MacOSPortfolio: React.FC = () => {
       })}
       </AnimatePresence>
 
-      {/* Enhanced Dock */}
+      {/* Enhanced Dock with Auto-Hide */}
       <MacOSDock
         apps={apps}
         onAppClick={handleAppClick}
         openApps={openWindows}
+        isVisible={isDockVisible}
+        onMouseEnter={() => setIsDockHovered(true)}
+        onMouseLeave={() => setIsDockHovered(false)}
       />
     </motion.div>
   );
