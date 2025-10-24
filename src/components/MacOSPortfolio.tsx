@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import MacOSLockScreen from './MacOSLockScreen';
 import { 
   Briefcase, 
   Github,
@@ -90,7 +91,9 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
       dragDataRef.current = {
         offsetX: e.clientX - rect.left,
         offsetY: e.clientY - rect.top,
-        isDragging: true
+        isDragging: true,
+        currentX: rect.left,
+        currentY: rect.top
       };
       setIsDragging(true);
       
@@ -333,11 +336,17 @@ const Window: React.FC<WindowProps> = ({ id, title, onClose, children, initialPo
       
       {/* Dark Window Content */}
       <div className={`bg-gradient-to-br from-gray-900/20 to-transparent overflow-auto scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent select-text ${
-        isMaximized ? 'flex-1 p-6 window-content' : 'max-h-[calc(700px-100px)] p-8'
+        id === 'terminal' 
+          ? (isMaximized ? 'flex-1 window-content' : 'max-h-[calc(700px-100px)]')
+          : (isMaximized ? 'flex-1 p-6 window-content' : 'max-h-[calc(700px-100px)] p-8')
       }`} style={{ pointerEvents: 'auto' }}>
-        <div className="space-y-6">
-        {children}
-        </div>
+        {id === 'terminal' ? (
+          children
+        ) : (
+          <div className="space-y-6">
+            {children}
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -790,6 +799,52 @@ const ProjectsApp = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* View All Projects Button Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: projects.length * 0.1 + 0.2 }}
+        className="text-center mt-12"
+      >
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="inline-block"
+        >
+          <a
+            href="https://github.com/mbelouar?tab=repositories"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-600 hover:border-gray-500"
+          >
+            <motion.div
+              whileHover={{ rotate: 12 }}
+              className="w-6 h-6"
+            >
+              <Github className="w-6 h-6 group-hover:text-primary transition-colors duration-300" />
+            </motion.div>
+            <span className="text-lg font-semibold group-hover:text-primary transition-colors duration-300">
+              View All Projects
+            </span>
+            <motion.div
+              whileHover={{ x: 4 }}
+              className="w-5 h-5"
+            >
+              <ExternalLink className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+            </motion.div>
+          </a>
+        </motion.div>
+        
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: projects.length * 0.1 + 0.4 }}
+          className="text-sm text-muted-foreground mt-4"
+        >
+          Explore more projects and contributions on my GitHub profile
+        </motion.p>
+      </motion.div>
     </motion.div>
   );
 };
@@ -1552,13 +1607,64 @@ const CertificationsApp = () => {
 };
 
 // Modern Contact App Component
-const ContactApp = () => (
-  <motion.div 
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.6 }}
-    className="space-y-8"
-  >
+const ContactApp = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(data.error || 'Failed to send message');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setErrorMessage('Network error. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="space-y-8"
+    >
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -1721,7 +1827,7 @@ const ContactApp = () => (
          </div>
        </div>
        
-       <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+       <form className="space-y-8" onSubmit={handleSubmit}>
          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
            <motion.div
              initial={{ opacity: 0, x: -20 }}
@@ -1734,6 +1840,10 @@ const ContactApp = () => (
              </label>
              <input
                type="text"
+               name="name"
+               value={formData.name}
+               onChange={handleInputChange}
+               required
                className="w-full px-6 py-4 bg-gray-800/30 border border-gray-700/50 rounded-2xl text-foreground placeholder-muted-foreground focus:border-gray-600 focus:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-gray-600/20 transition-all duration-300 hover:bg-gray-800/40"
                placeholder="Enter your full name"
              />
@@ -1749,6 +1859,10 @@ const ContactApp = () => (
              </label>
              <input
                type="email"
+               name="email"
+               value={formData.email}
+               onChange={handleInputChange}
+               required
                className="w-full px-6 py-4 bg-gray-800/30 border border-gray-700/50 rounded-2xl text-foreground placeholder-muted-foreground focus:border-gray-600 focus:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-gray-600/20 transition-all duration-300 hover:bg-gray-800/40"
                placeholder="your.email@example.com"
              />
@@ -1766,6 +1880,10 @@ const ContactApp = () => (
            </label>
            <input
              type="text"
+             name="subject"
+             value={formData.subject}
+             onChange={handleInputChange}
+             required
              className="w-full px-6 py-4 bg-gray-800/30 border border-gray-700/50 rounded-2xl text-foreground placeholder-muted-foreground focus:border-gray-600 focus:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-gray-600/20 transition-all duration-300 hover:bg-gray-800/40"
              placeholder="What's this message about?"
            />
@@ -1781,6 +1899,10 @@ const ContactApp = () => (
              Message
            </label>
            <textarea
+             name="message"
+             value={formData.message}
+             onChange={handleInputChange}
+             required
              className="w-full px-6 py-4 bg-gray-800/30 border border-gray-700/50 rounded-2xl text-foreground placeholder-muted-foreground focus:border-gray-600 focus:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-gray-600/20 transition-all duration-300 resize-none hover:bg-gray-800/40"
              rows={6}
              placeholder="Tell me about your project, collaboration idea, or any questions you have..."
@@ -1791,101 +1913,530 @@ const ContactApp = () => (
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.6, delay: 0.8 }}
-           className="flex justify-center"
+           className="flex flex-col items-center gap-4"
          >
+           {/* Success/Error Messages */}
+           {submitStatus === 'success' && (
+             <motion.div
+               initial={{ opacity: 0, y: -10 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="w-full max-w-md p-4 bg-green-500/20 border border-green-500/30 rounded-2xl text-green-400 text-center"
+             >
+               <div className="flex items-center justify-center gap-2 mb-2">
+                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                 <span className="font-semibold">Message Sent Successfully!</span>
+               </div>
+               <p className="text-sm">Thank you for reaching out. I'll get back to you soon!</p>
+             </motion.div>
+           )}
+
+           {submitStatus === 'error' && (
+             <motion.div
+               initial={{ opacity: 0, y: -10 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="w-full max-w-md p-4 bg-red-500/20 border border-red-500/30 rounded-2xl text-red-400 text-center"
+             >
+               <div className="flex items-center justify-center gap-2 mb-2">
+                 <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                 <span className="font-semibold">Failed to Send Message</span>
+               </div>
+               <p className="text-sm">{errorMessage}</p>
+             </motion.div>
+           )}
+
            <motion.button 
              type="submit"
-             whileHover={{ scale: 1.05, y: -2 }}
-             whileTap={{ scale: 0.95 }}
-             className="px-12 py-4 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl border border-gray-600 hover:border-gray-500 transition-all duration-300 flex items-center gap-3 group"
+             disabled={isSubmitting}
+             whileHover={!isSubmitting ? { scale: 1.05, y: -2 } : {}}
+             whileTap={!isSubmitting ? { scale: 0.95 } : {}}
+             className={`px-12 py-4 font-semibold rounded-2xl shadow-lg border transition-all duration-300 flex items-center gap-3 group ${
+               isSubmitting 
+                 ? 'bg-gray-600 text-gray-400 border-gray-600 cursor-not-allowed' 
+                 : 'bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white hover:shadow-xl border-gray-600 hover:border-gray-500'
+             }`}
            >
-             <Mail className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-             Send Message
-             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+             {isSubmitting ? (
+               <>
+                 <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                 Sending...
+               </>
+             ) : (
+               <>
+                 <Mail className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                 Send Message
+                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+               </>
+             )}
            </motion.button>
          </motion.div>
        </form>
      </motion.div>
   </motion.div>
-);
+  );
+};
 
 // Modern Terminal App Component
 const TerminalApp = () => {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState<string[]>(['Welcome to Portfolio Terminal. Type "help" for commands.']);
+  const [output, setOutput] = useState<string[]>([
+    'Portfolio Terminal v2.0.0',
+    '========================',
+    '',
+    'Welcome to Mohammed Belouarraq\'s Interactive Portfolio Terminal.',
+    'Type "help" to see available commands and explore the portfolio.',
+    '',
+    'Quick Start:',
+    '• help          - Show all available commands',
+    '• about         - View personal information',
+    '• projects      - Browse academic projects',
+    '• skills        - Check technical skills',
+    '• cat README.md - View project documentation',
+    ''
+  ]);
+  const terminalContentRef = useRef<HTMLDivElement>(null);
 
   const handleCommand = (cmd: string) => {
-    const command = cmd.trim().toLowerCase();
-    let response = '';
+    const trimmedCmd = cmd.trim();
+    const parts = trimmedCmd.split(' ');
+    const command = parts[0].toLowerCase();
+    let response: string[] = [];
 
     switch (command) {
+      case 'cat':
+        // Check if a filename was provided
+        const args = parts.slice(1);
+        if (args.length === 0) {
+          response = ['cat: missing file operand', 'Usage: cat <filename>'];
+        } else {
+          const filename = args[0].toLowerCase();
+          if (filename === 'readme.md' || filename === 'readme') {
+            response = [
+              '# macOS-Style Interactive Portfolio',
+              '',
+              'A stunning, interactive portfolio website designed to look and feel like a real macOS desktop environment. Built with Next.js, TypeScript, and Framer Motion.',
+              '',
+              '## 🌟 Features',
+              '',
+              '- **macOS-Inspired Design**: Authentic macOS look with glassmorphism effects, realistic shadows, and smooth animations',
+              '- **Interactive Desktop**: Draggable and resizable windows, functional dock, and menu bar',
+              '- **Portfolio Apps**:',
+              '  - 👤 About Me - Personal information and system details',
+              '  - 💼 Projects - Showcase of work with interactive cards',
+              '  - ⚙️ Skills - Interactive skill visualization with progress bars',
+              '  - 🏢 Experience - Timeline view of work history',
+              '  - ✉️ Contact - Contact form and social links',
+              '  - 🖥️ Terminal - Interactive CLI experience',
+              '- **Responsive Design**: Works beautifully on all devices',
+              '- **Smooth Animations**: Powered by Framer Motion for fluid interactions',
+              '- **Modern Tech Stack**: Next.js 14, TypeScript, Tailwind CSS',
+              '',
+              '## 🚀 Getting Started',
+              '',
+              '### Prerequisites',
+              '',
+              '- Node.js 18+',
+              '- npm or yarn',
+              '',
+              '### Installation',
+              '',
+              '1. Clone the repository:',
+              '',
+              '```bash',
+              'git clone <repository-url>',
+              'cd Portfolio',
+              '```',
+              '',
+              '2. Install dependencies:',
+              '',
+              '```bash',
+              'npm install',
+              '# or',
+              'yarn install',
+              '```',
+              '',
+              '3. Run the development server:',
+              '',
+              '```bash',
+              'npm run dev',
+              '# or',
+              'yarn dev',
+              '```',
+              '',
+              '4. Open [http://localhost:3000](http://localhost:3000) in your browser.',
+              '',
+              '## 🎨 Customization',
+              '',
+              '### Personal Information',
+              '',
+              'Update the following files with your personal information:',
+              '',
+              '1. **About Me App** (`src/components/apps/AboutApp.tsx`):',
+              '   - Replace placeholder name, role, and bio',
+              '   - Update system information',
+              '   - Modify interests and hobbies',
+              '',
+              '2. **Projects App** (`src/components/apps/ProjectsApp.tsx`):',
+              '   - Add your actual projects',
+              '   - Update project descriptions, technologies, and links',
+              '   - Replace placeholder images with project screenshots',
+              '',
+              '3. **Skills App** (`src/components/apps/SkillsApp.tsx`):',
+              '   - Update skill levels and categories',
+              '   - Add or remove technologies',
+              '   - Modify learning goals',
+              '',
+              '4. **Experience App** (`src/components/apps/ExperienceApp.tsx`):',
+              '   - Replace with your work experience',
+              '   - Update company names, positions, and descriptions',
+              '   - Modify education section',
+              '',
+              '5. **Contact App** (`src/components/apps/ContactApp.tsx`):',
+              '   - Update contact information',
+              '   - Replace social media links',
+              '   - Modify availability status',
+              '',
+              '6. **Terminal App** (`src/components/apps/TerminalApp.tsx`):',
+              '   - Customize command responses',
+              '   - Add new commands if desired',
+              '   - Update personal information in responses',
+              '',
+              '### Styling',
+              '',
+              '- **Colors**: Modify the color palette in `tailwind.config.ts`',
+              '- **Fonts**: Update font imports in `src/app/globals.css`',
+              '- **Animations**: Adjust animation timings in component files',
+              '',
+              '### App Configuration',
+              '',
+              'Modify `src/utils/appsConfig.ts` to:',
+              '',
+              '- Change app icons',
+              '- Adjust default window sizes and positions',
+              '- Add or remove apps',
+              '',
+              '## 📱 Browser Support',
+              '',
+              '- Chrome (recommended)',
+              '- Firefox',
+              '- Safari',
+              '- Edge',
+              '',
+              '## 🛠️ Built With',
+              '',
+              '- **Framework**: Next.js 14',
+              '- **Language**: TypeScript',
+              '- **Styling**: Tailwind CSS',
+              '- **Animations**: Framer Motion',
+              '- **Icons**: Lucide React',
+              '- **Interactions**: React Draggable, React Resizable',
+              '',
+              '## 📄 License',
+              '',
+              'This project is open source and available under the [MIT License](LICENSE).',
+              '',
+              '## 🤝 Contributing',
+              '',
+              'Contributions, issues, and feature requests are welcome! Feel free to check the issues page.',
+              '',
+              '## 📞 Support',
+              '',
+              'If you have any questions or need help customizing the portfolio, feel free to reach out!',
+              '',
+              '---',
+              '',
+              '**Made with ❤️ and lots of ☕**'
+            ];
+          } else if (filename === 'license' || filename === 'license.txt') {
+            response = [
+              'MIT License',
+              '',
+              'Copyright (c) 2024 Mohammed Belouarraq',
+              '',
+              'Permission is hereby granted, free of charge, to any person obtaining a copy',
+              'of this software and associated documentation files (the "Software"), to deal',
+              'in the Software without restriction, including without limitation the rights',
+              'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
+              'copies of the Software, and to permit persons to whom the Software is',
+              'furnished to do so, subject to the following conditions:',
+              '',
+              'The above copyright notice and this permission notice shall be included in all',
+              'copies or substantial portions of the Software.',
+              '',
+              'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR',
+              'IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,',
+              'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE',
+              'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER',
+              'LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
+              'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE',
+              'SOFTWARE.'
+            ];
+          } else {
+            response = [`cat: ${filename}: No such file or directory`];
+          }
+        }
+        break;
       case 'help':
-        response = 'Available commands: about, projects, skills, experience, certifications, contact, clear';
+        response = [
+          'Portfolio Terminal - Available Commands',
+          '=====================================',
+          '',
+          '  about          Show personal information and bio',
+          '  projects       List academic and personal projects',
+          '  skills         Display technical skills and proficiencies',
+          '  experience     Show professional work experience',
+          '  certifications List certifications and achievements',
+          '  contact        Display contact information',
+          '  cat <file>     Display file contents (README.md, LICENSE)',
+          '  clear          Clear terminal screen',
+          '  ls             List directory contents',
+          '  pwd            Print working directory',
+          '  whoami         Display current user',
+          '',
+          'Type any command and press Enter to execute.',
+          'Use "cat README.md" to view project documentation.'
+        ];
         break;
       case 'about':
-        response = 'Final-year Computer Engineering Student & DevOps Enthusiast. Phone: +212 688 191 812 | Email: medbelouarraq@gmail.com';
+        response = [
+          'Personal Information',
+          '===================',
+          '',
+          'Name:           Mohammed Belouarraq',
+          'Role:           Final-year Computer Engineering Student',
+          'Specialization: DevOps & Cloud Enthusiast',
+          '',
+          'Bio:',
+          'Passionate about cloud technologies, containerization, and',
+          'automation. Currently pursuing Computer Engineering with a',
+          'focus on DevOps practices and cloud infrastructure.',
+          '',
+          'Contact Information:',
+          '  📧 Email: medbelouarraq@gmail.com',
+          '  📱 Phone: +212 688 191 812',
+          '  📍 Location: Casablanca, Morocco',
+          '',
+          'Interests:',
+          '• Cloud Computing & Infrastructure',
+          '• Container Orchestration (Kubernetes)',
+          '• CI/CD Pipeline Automation',
+          '• Infrastructure as Code (Terraform)',
+          '• System Monitoring & Observability'
+        ];
         break;
       case 'projects':
-        response = 'SecureAuth (IAM Platform), IoT Kubernetes Orchestration, Transendence Gaming Platform, Inception Multi-Service System, NestTools Community Platform';
+        response = [
+          'Academic & Personal Projects',
+          '============================',
+          '',
+          '🔐 SecureAuth (2025)',
+          '   Identity and Access Management platform',
+          '   Tech: Kubernetes, Docker, Helm, Terraform',
+          '',
+          '☁️  IoT Kubernetes Orchestration (2024)',
+          '   Container orchestration using K3s',
+          '   Tech: K8s, k3s, k3d, Vagrant, ArgoCD',
+          '',
+          '🎮 Transendence (2024)',
+          '   Multiplayer gaming platform',
+          '   Tech: Django, Docker, PostgreSQL',
+          '',
+          '🐳 Inception (2023)',
+          '   Multi-service containerized system',
+          '   Tech: Docker, Nginx, WordPress, MariaDB',
+          '',
+          '🔧 NestTools (2023)',
+          '   Community tool-rental platform',
+          '   Tech: React, Next.js, Laravel'
+        ];
         break;
       case 'skills':
-        response = 'DevOps: Kubernetes (90%), Docker (95%), Terraform (85%), ArgoCD (80%), Prometheus (85%) | Languages: Python (90%), C/C++ (85%), JavaScript (80%)';
+        response = [
+          'Technical Skills & Proficiencies',
+          '================================',
+          '',
+          'DevOps & Cloud Tools:',
+          '  ✓ Kubernetes (90%) - Container orchestration',
+          '  ✓ Docker (95%) - Containerization platform',
+          '  ✓ Terraform (85%) - Infrastructure as Code',
+          '  ✓ ArgoCD (80%) - GitOps continuous delivery',
+          '  ✓ Prometheus (85%) - Monitoring & alerting',
+          '  ✓ Grafana (80%) - Data visualization',
+          '  ✓ CI/CD (90%) - Pipeline automation',
+          '  ✓ Vagrant (70%) - Development environments',
+          '  ✓ Linux/Unix (90%) - System administration',
+          '',
+          'Programming Languages:',
+          '  ✓ Python (90%) - Backend development',
+          '  ✓ C/C++ (85%) - System programming',
+          '',
+          'Frameworks & Databases:',
+          '  ✓ Django (90%) - Web framework',
+          '  ✓ MySQL (85%) - Relational database',
+          '  ✓ MongoDB (80%) - NoSQL database',
+          '',
+          'Tools & Technologies:',
+          '  ✓ Git/GitHub (95%) - Version control',
+          '  ✓ Docker Compose (90%) - Multi-container apps',
+          '  ✓ k3s/k3d (85%) - Lightweight Kubernetes'
+        ];
         break;
       case 'experience':
-        response = 'E2IP Technologies (DevOps Intern), ADE President (1000+ students), BMCE Group (Software Research), National School of Applied Sciences';
+        response = [
+          'Professional Work Experience',
+          '============================',
+          '',
+          '🏢 E2IP Technologies (Jul 2025 - Sep 2025)',
+          '   Position: DevOps & IAM Intern',
+          '   Responsibilities:',
+          '   • Deployed cloud-native IAM solutions',
+          '   • Automated CI/CD pipelines for microservices',
+          '   • Monitored system performance and reliability',
+          '   • Implemented infrastructure as code practices',
+          '',
+          '👥 ADE Student Association (Jan 2024 - Mar 2025)',
+          '   Position: President',
+          '   Responsibilities:',
+          '   • Led 1000+ students in academic initiatives',
+          '   • Organized technical events and workshops',
+          '   • Managed budgets and strategic planning',
+          '   • Coordinated with faculty and administration',
+          '',
+          '🏦 BMCE Group (Jun 2023 - Aug 2023)',
+          '   Position: Software Research Intern',
+          '   Responsibilities:',
+          '   • Document digitization projects',
+          '   • Software research and development',
+          '   • Data analysis and reporting',
+          '   • Technical documentation'
+        ];
         break;
       case 'certifications':
-        response = 'KCNA (Kubernetes & Cloud Native Associate) - Linux Foundation | Docker Foundations Professional Certificate - Docker Inc';
+        response = [
+          'Professional Certifications',
+          '===========================',
+          '',
+          '🏆 KCNA - Kubernetes and Cloud Native Associate',
+          '   Issuer: The Linux Foundation',
+          '   Date: September 2025',
+          '   Focus: Kubernetes fundamentals and cloud-native practices',
+          '',
+          '🐳 Docker Foundations Professional Certificate',
+          '   Issuer: Docker, Inc',
+          '   Date: June 2025',
+          '   Focus: Containerization and container orchestration',
+          '',
+          'All certifications are industry-recognized and verified.',
+          'Continuous learning in cloud technologies and DevOps practices.'
+        ];
         break;
       case 'contact':
-        response = 'Email: medbelouarraq@gmail.com | Phone: +212 688 191 812 | LinkedIn: MOHAMMED BEL OUARRAQ | GitHub: @mbelouar';
+        response = [
+          'Contact Information',
+          '===================',
+          '',
+          '📧 Email: medbelouarraq@gmail.com',
+          '📱 Phone: +212 688 191 812',
+          '📍 Location: Casablanca, Morocco',
+          '',
+          'Social Links:',
+          '🔗 LinkedIn: MOHAMMED BEL OUARRAQ',
+          '🐙 GitHub: @mbelouar',
+          '',
+          'Availability:',
+          'Available for internships and collaboration opportunities.',
+          'Open to remote work and freelance projects.',
+          '',
+          'Response Time:',
+          'Typically respond within 24 hours.'
+        ];
+        break;
+      case 'ls':
+        response = [
+          'Portfolio Directory Contents',
+          '============================',
+          '',
+          '📁 about/',
+          '📁 projects/',
+          '📁 skills/',
+          '📁 experience/',
+          '📁 certifications/',
+          '📁 contact/',
+          '📄 README.md        Project documentation',
+          '📄 LICENSE          MIT License file',
+          '📄 package.json     Project dependencies',
+          '📄 portfolio.json  Portfolio configuration'
+        ];
+        break;
+      case 'pwd':
+        response = ['/home/mohammed/portfolio'];
+        break;
+      case 'whoami':
+        response = ['mohammed'];
         break;
       case 'clear':
         setOutput([]);
         return;
       default:
-        response = `Command not found: ${cmd}`;
+        response = [`bash: ${command}: command not found`];
     }
 
-    setOutput([...output, `$ ${cmd}`, response]);
+    setOutput([...output, `$ ${cmd}`, ...response, '']);
   };
+
+  // Auto-scroll to bottom when new content is added
+  useEffect(() => {
+    if (terminalContentRef.current) {
+      terminalContentRef.current.scrollTop = terminalContentRef.current.scrollHeight;
+    }
+  }, [output]);
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="space-y-6"
+      className="h-full w-full"
     >
-      <div className="bg-gradient-to-br from-gray-900 via-gray-950 to-black text-green-400 p-6 rounded-xl font-mono text-sm min-h-[400px] shadow-2xl border border-gray-800/50 relative overflow-hidden">
-        {/* Terminal Header */}
-        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-700/30">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-          </div>
-          <span className="text-gray-400 text-xs ml-4">portfolio-terminal</span>
-        </div>
+       <div className="bg-gradient-to-br from-gray-900 via-gray-950 to-black text-green-400 font-mono text-sm h-[500px] w-full relative flex flex-col">
         
-        {/* Terminal Content */}
-        <div className="space-y-1">
+        {/* Terminal Content - Scrollable */}
+        <div ref={terminalContentRef} className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent font-mono text-sm p-4">
           {output.map((line, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              className={`mb-1 ${line.startsWith('$') ? 'text-blue-400' : line.includes('Command not found') ? 'text-red-400' : 'text-green-400'}`}
+              transition={{ duration: 0.3, delay: index * 0.02 }}
+              className={`mb-0.5 leading-relaxed ${
+                line.startsWith('$') 
+                  ? 'text-blue-300 font-semibold' 
+                  : line.includes('bash:') || line.includes('command not found') || line.includes('cat:')
+                  ? 'text-red-300 font-medium'
+                  : line.includes('Welcome') || line.includes('Type "help"')
+                  ? 'text-yellow-300 font-medium'
+                  : line.includes('Available commands:') || line.includes('Academic Projects:') || line.includes('Technical Skills:') || line.includes('Professional Experience:') || line.includes('Certifications:') || line.includes('Contact Information:') || line.includes('Portfolio Contents:')
+                  ? 'text-cyan-300 font-bold text-lg'
+                  : line.includes('✓') || line.includes('•')
+                  ? 'text-green-300 font-medium'
+                  : line.includes('📧') || line.includes('📱') || line.includes('📍') || line.includes('🔗') || line.includes('🐙') || line.includes('🏢') || line.includes('👥') || line.includes('🏦') || line.includes('🏆') || line.includes('🐳') || line.includes('🔐') || line.includes('☁️') || line.includes('🎮') || line.includes('🔧') || line.includes('📁') || line.includes('📄')
+                  ? 'text-gray-200'
+                  : line.trim() === ''
+                  ? 'text-transparent h-2'
+                  : line.includes('---') || line.includes('===') || line.includes('###')
+                  ? 'text-gray-500 font-bold'
+                  : line.includes('Usage:') || line.includes('Issuer:') || line.includes('Date:')
+                  ? 'text-gray-400 font-medium'
+                  : 'text-green-200'
+              }`}
             >
               {line}
             </motion.div>
           ))}
         </div>
         
-        {/* Terminal Input */}
-        <div className="flex items-center gap-2 mt-4 pt-2 border-t border-gray-700/30">
-          <span className="text-blue-400 font-bold">$</span>
+        {/* Terminal Input - Always Visible at Bottom */}
+        <div className="flex items-center gap-2 px-4 py-3 bg-gray-900/30 border-t border-gray-700/20 flex-shrink-0">
+          <span className="text-blue-300 font-bold font-mono text-sm">mohammed@portfolio:~$</span>
           <input
             type="text"
             value={input}
@@ -1896,14 +2447,14 @@ const TerminalApp = () => {
                 setInput('');
               }
             }}
-            className="flex-1 bg-transparent outline-none text-green-400 placeholder-gray-500 focus:text-green-300 transition-colors"
+            className="flex-1 bg-transparent outline-none text-green-200 placeholder-gray-500 focus:text-green-100 transition-colors font-mono text-sm"
             placeholder="Type a command..."
             autoFocus
           />
           <motion.div
             animate={{ opacity: [1, 0, 1] }}
             transition={{ duration: 1, repeat: Infinity }}
-            className="w-2 h-4 bg-green-400"
+            className="w-2 h-4 bg-green-400 rounded-sm"
           />
         </div>
       </div>
@@ -2059,6 +2610,7 @@ const MacOSPortfolio: React.FC = () => {
   const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
   const [isDockVisible, setIsDockVisible] = useState(true);
   const [isDockHovered, setIsDockHovered] = useState(false);
+  const [isLocked, setIsLocked] = useState(true);
   const mouseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const dockTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -2317,14 +2869,35 @@ const MacOSPortfolio: React.FC = () => {
     }
   };
 
+  const handleUnlock = () => {
+    setIsLocked(false);
+  };
+
+  const handleLock = () => {
+    setIsLocked(true);
+  };
+
   return (
-    <motion.div 
-      className="min-h-screen w-full relative overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      style={{ opacity: 1 }}
-    >
+    <>
+      {/* macOS Lock Screen */}
+      <AnimatePresence>
+        {isLocked && (
+          <MacOSLockScreen 
+            onUnlock={handleUnlock}
+            userName="Mohammed Belouarraq"
+            userImage="/images/med.png"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Main Portfolio Interface */}
+      <motion.div 
+        className="min-h-screen w-full relative overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLocked ? 0 : 1 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        style={{ opacity: isLocked ? 0 : 1 }}
+      >
       {/* Enhanced Interactive Background Elements */}
       <div className="floating-element"></div>
       <div className="floating-element"></div>
@@ -2444,29 +3017,14 @@ const MacOSPortfolio: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
             >
-              Selection
-            </motion.span>
-            <motion.span 
-              whileHover={{ scale: 1.05 }}
-              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
-            >
               View
             </motion.span>
             <motion.span 
               whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleAppClick('terminal')}
               className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
-            >
-              Go
-            </motion.span>
-            <motion.span 
-              whileHover={{ scale: 1.05 }}
-              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
-            >
-              Run
-            </motion.span>
-            <motion.span 
-              whileHover={{ scale: 1.05 }}
-              className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+              title="Open Terminal"
             >
               Terminal
             </motion.span>
@@ -2478,7 +3036,10 @@ const MacOSPortfolio: React.FC = () => {
             </motion.span>
             <motion.span 
               whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleAppClick('contact')}
               className="hover:text-white transition-colors cursor-pointer px-2 py-1 rounded-sm hover:bg-white/10 font-medium"
+              title="Open Contact"
             >
               Help
             </motion.span>
@@ -2487,53 +3048,59 @@ const MacOSPortfolio: React.FC = () => {
 
         {/* System Indicators */}
         <div className="flex items-center gap-3">
-          {/* Control Center */}
-        <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
-          >
-            <div className="w-3 h-3 border border-white/60 rounded-sm"></div>
-          </motion.div>
-          
-          {/* Wi-Fi */}
-          <motion.div 
-            whileHover={{ scale: 1.1 }}
-            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
-          >
-            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white/80">
-              <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
-            </svg>
-          </motion.div>
-          
-          {/* Battery */}
-          <div className="flex items-center gap-1 text-white/80 text-xs">
-            <div className="relative">
-              <svg width="16" height="10" viewBox="0 0 16 10" className="fill-current">
-                <rect x="0.5" y="1.5" width="13" height="7" rx="1.5" ry="1.5" fill="none" stroke="currentColor" strokeWidth="1"/>
-                <rect x="14" y="3" width="1" height="4" rx="0.5" ry="0.5" fill="currentColor"/>
-                <rect x="1" y="2" width="12" height="6" rx="1" ry="1" fill="currentColor" opacity="0.8"/>
-              </svg>
+          {/* Caps Lock Indicator */}
+          <div className="flex items-center">
+            <div className="w-5 h-3 border border-white/80 rounded-sm flex items-center justify-center">
+              <span className="text-xs font-medium text-white/80">A</span>
             </div>
-            <span className="text-[10px]">85%</span>
           </div>
-          
-          {/* Search */}
-          <motion.div 
+
+          {/* Keyboard Layout */}
+          <span className="text-sm font-normal text-white/80" style={{ fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+            ABC
+          </span>
+
+          {/* Battery */}
+          <div className="flex items-center">
+            <svg width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+              <rect x="1" y="6" width="18" height="12" rx="2" ry="2" />
+              <line x1="23" y1="13" x2="23" y2="11" />
+              <rect x="3" y="8" width="14" height="8" rx="1" ry="1" fill="currentColor" />
+            </svg>
+          </div>
+
+          {/* WiFi */}
+          <div className="flex items-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+              <path d="M2 8.5a16 16 0 0 1 20 0" />
+              <path d="M5 12.5a11 11 0 0 1 14 0" />
+              <path d="M8.5 16.5a6 6 0 0 1 7 0" />
+              <line x1="12" y1="20" x2="12.01" y2="20" />
+            </svg>
+          </div>
+
+          {/* Lock Screen Button */}
+          <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors"
+            onClick={handleLock}
+            className="w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-white/10 rounded-sm transition-colors group"
+            title="Lock Screen"
           >
-            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white/80">
-              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white/80 group-hover:fill-white transition-colors">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
             </svg>
           </motion.div>
-          
-          {/* Time */}
-          <span className="text-xs text-white/90 font-medium px-2 py-1 rounded-sm hover:bg-white/10 cursor-pointer transition-colors">
-            {time}
+
+          {/* Date and Time */}
+          <span className="text-sm font-normal text-white/80" style={{ fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+            {new Date().toLocaleDateString('en-US', { 
+              weekday: 'short', 
+              day: 'numeric', 
+              month: 'short' 
+            })} {time}
           </span>
-      </div>
+        </div>
       </motion.div>
 
       {/* Enhanced Hero Section */}
@@ -2562,20 +3129,117 @@ const MacOSPortfolio: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-xl text-muted-foreground mb-12 leading-relaxed"
           >
-            Final-year Computer Engineering Student & DevOps Enthusiast<br />
+             Final-year Computer Engineering Student - DevOps & Cloud<br />
             <span className="text-primary">Specialized in Kubernetes, Docker, and Cloud Infrastructure</span>
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex items-center justify-center gap-2 text-muted-foreground text-sm animate-bounce-gentle"
-          >
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span>Open apps from the dock below</span>
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          </motion.div>
+         <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8, delay: 0.6 }}
+           className="flex flex-col items-center gap-4"
+         >
+           {/* Enhanced instruction text with better styling */}
+           <motion.div
+             initial={{ opacity: 0, scale: 0.9 }}
+             animate={{ opacity: 1, scale: 1 }}
+             transition={{ duration: 0.6, delay: 0.8 }}
+             className="flex items-center gap-3 px-6 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl shadow-lg"
+           >
+             {/* Animated dots */}
+             <div className="flex items-center gap-2">
+               <motion.div
+                 className="w-2 h-2 rounded-full bg-blue-400"
+                 animate={{ 
+                   scale: [1, 1.2, 1],
+                   opacity: [0.7, 1, 0.7]
+                 }}
+                 transition={{ 
+                   duration: 2,
+                   repeat: Infinity,
+                   ease: "easeInOut"
+                 }}
+               />
+               <motion.div
+                 className="w-2 h-2 rounded-full bg-green-400"
+                 animate={{ 
+                   scale: [1, 1.2, 1],
+                   opacity: [0.7, 1, 0.7]
+                 }}
+                 transition={{ 
+                   duration: 2,
+                   repeat: Infinity,
+                   ease: "easeInOut",
+                   delay: 0.3
+                 }}
+               />
+               <motion.div
+                 className="w-2 h-2 rounded-full bg-purple-400"
+                 animate={{ 
+                   scale: [1, 1.2, 1],
+                   opacity: [0.7, 1, 0.7]
+                 }}
+                 transition={{ 
+                   duration: 2,
+                   repeat: Infinity,
+                   ease: "easeInOut",
+                   delay: 0.6
+                 }}
+               />
+             </div>
+             
+              {/* Instruction text */}
+              <motion.span
+                className="text-sm font-medium text-white/90 tracking-wide"
+                animate={{ 
+                  opacity: [0.8, 1, 0.8]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                Open apps from the dock below
+              </motion.span>
+           </motion.div>
+
+           {/* Subtle arrow pointing down */}
+           <motion.div
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ duration: 0.6, delay: 1.0 }}
+             className="flex flex-col items-center gap-2"
+           >
+             <motion.div
+               animate={{ 
+                 y: [0, 8, 0],
+                 opacity: [0.6, 1, 0.6]
+               }}
+               transition={{ 
+                 duration: 2,
+                 repeat: Infinity,
+                 ease: "easeInOut"
+               }}
+               className="flex flex-col items-center gap-1"
+             >
+               <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
+                 <motion.div
+                   animate={{ y: [0, 12, 0] }}
+                   transition={{ 
+                     duration: 2,
+                     repeat: Infinity,
+                     ease: "easeInOut"
+                   }}
+                   className="w-1 h-3 bg-white/60 rounded-full"
+                 />
+               </div>
+               <span className="text-xs font-medium text-white/60 tracking-wider">
+                 DOCK
+               </span>
+             </motion.div>
+           </motion.div>
+         </motion.div>
         </motion.div>
       </div>
 
@@ -2617,6 +3281,7 @@ const MacOSPortfolio: React.FC = () => {
         onMouseLeave={() => setIsDockHovered(false)}
       />
     </motion.div>
+    </>
   );
 };
 

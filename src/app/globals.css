@@ -1075,3 +1075,393 @@ h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
   margin: 0 !important;
   padding: 24px !important;
 }
+
+/* macOS Lock Screen Styles - Authentic Design */
+.lock-screen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+.lock-screen-background {
+  position: absolute;
+  inset: 0;
+  background-image: url('/macos.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: blur(0px);
+}
+
+.lock-screen-blur-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+/* Lock Screen Time Display - Authentic macOS Style */
+.lock-screen-time {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 100;
+  font-size: 6rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: white;
+  text-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.lock-screen-date {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Lock Screen Profile Section - Authentic macOS Style */
+.lock-screen-profile {
+  position: absolute;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.lock-screen-avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 0 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  position: relative;
+}
+
+.lock-screen-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.lock-screen-avatar-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  filter: blur(20px);
+  opacity: 0.6;
+}
+
+.lock-screen-username {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  font-size: 1.5rem;
+  color: white;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  text-transform: capitalize;
+}
+
+/* Lock Screen Password Field - Authentic macOS Style */
+.lock-screen-password-field {
+  position: relative;
+  width: 16rem;
+  margin: 0 auto;
+}
+
+.lock-screen-password-input {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1.5rem;
+  color: white;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.2em;
+}
+
+.lock-screen-password-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: normal;
+}
+
+.lock-screen-password-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 8px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 4px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lock-screen-password-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lock-screen-password-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  filter: blur(8px);
+  z-index: -1;
+}
+
+/* Lock Screen Unlock Button - Authentic macOS Style */
+.lock-screen-unlock-btn {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.75rem;
+  height: 1.75rem;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.lock-screen-unlock-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lock-screen-unlock-btn:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+.lock-screen-unlock-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lock-screen-unlock-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: white;
+  stroke-width: 2;
+}
+
+/* Lock Screen Hint Text - Authentic macOS Style */
+.lock-screen-hint {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 1.5rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: lock-screen-hint-float 3s ease-in-out infinite;
+}
+
+@keyframes lock-screen-hint-float {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+/* Lock Screen Top Right Status Bar - Authentic macOS Style */
+.lock-screen-status-bar {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.lock-screen-status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  font-size: 0.75rem;
+}
+
+.lock-screen-status-icon {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 2;
+}
+
+/* Lock Screen Unlocking Animation - Authentic macOS Style */
+.lock-screen-unlocking-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lock-screen-unlocking-spinner {
+  width: 4rem;
+  height: 4rem;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: lock-screen-spin 1s linear infinite;
+}
+
+.lock-screen-unlocking-text {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  color: white;
+  margin-top: 1.5rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes lock-screen-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Lock Screen Animations - Authentic macOS Style */
+@keyframes lock-screen-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes lock-screen-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes lock-screen-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lock-screen-slide-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}
+
+/* Lock Screen Responsive Design - Authentic macOS Style */
+@media (max-width: 768px) {
+  .lock-screen-time {
+    font-size: 4.5rem;
+  }
+  
+  .lock-screen-date {
+    font-size: 1.25rem;
+  }
+  
+  .lock-screen-avatar {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+  
+  .lock-screen-username {
+    font-size: 1.5rem;
+  }
+  
+  .lock-screen-password-field {
+    width: 14rem;
+  }
+  
+  .lock-screen-password-input {
+    font-size: 0.8125rem;
+    padding: 0.625rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .lock-screen-time {
+    font-size: 3.5rem;
+  }
+  
+  .lock-screen-date {
+    font-size: 1rem;
+  }
+  
+  .lock-screen-avatar {
+    width: 5rem;
+    height: 5rem;
+  }
+  
+  .lock-screen-username {
+    font-size: 1.25rem;
+  }
+  
+  .lock-screen-password-field {
+    width: 12rem;
+  }
+  
+  .lock-screen-password-input {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.875rem;
+  }
+  
+  .lock-screen-status-bar {
+    gap: 0.75rem;
+  }
+  
+  .lock-screen-status-item {
+    font-size: 0.625rem;
+  }
+}
